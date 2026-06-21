@@ -251,6 +251,7 @@ input{font-family:inherit}
 .search-box{flex:1;min-width:0}
 .search-box input{width:100%!important;min-width:0!important}
 .btn-sort, .btn-primary-sm{flex-shrink:0}
+.drag-handle{display:none}
 .card{padding:12px 16px}
 .card-top{margin-bottom:8px}
 .card-icon{width:36px;height:36px}
@@ -507,13 +508,13 @@ input{font-family:inherit}
 <div><h2 class="page-title">All Accounts</h2><p class="page-subtitle">Access your two-factor authentication tokens securely.</p></div>
 <div class="page-actions">
 <div class="search-box"><span class="ms">search</span><input type="text" id="searchInput" placeholder="Search accounts..." oninput="renderView()"></div>
-<button class="btn-sort" id="btnSortAZ" onclick="toggleSort('az')" title="Sort A-Z" style="display:none;"><span class="ms">sort_by_alpha</span><span class="sort-label">A-Z</span></button>
+<button class="btn-sort" id="btnSortAZ" onclick="toggleSort('az')" title="Sort A-Z"><span class="ms">sort_by_alpha</span><span class="sort-label">A-Z</span></button>
 <button class="btn-primary-sm" onclick="openModal('modalAdd')"><span class="ms">add</span> Add</button>
 </div>
 </header>
 <div class="timer-bar">
 <div class="timer-ring-g" id="timerRing"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="rbg" cx="22" cy="22" r="18"/><circle class="rfg" id="timerArc" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="0"/></svg><div class="rnum" id="timerNum">30</div></div>
-<div class="timer-info"><strong>Auto-refresh</strong> every 30 seconds &middot; <span id="timerLabel">Loading...</span></div>
+<div class="timer-info"><span id="timerLabel">Loading...</span></div>
 </div>
 <div id="cardsContainer"><div class="loading"><div class="spinner"></div>Loading accounts...</div></div>
 </div>
@@ -528,7 +529,7 @@ input{font-family:inherit}
 </header>
 <div class="timer-bar">
 <div class="timer-ring-g" id="timerRingFav"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="rbg" cx="22" cy="22" r="18"/><circle class="rfg" id="timerArcFav" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="0"/></svg><div class="rnum" id="timerNumFav">30</div></div>
-<div class="timer-info"><strong>Auto-refresh</strong> every 30 seconds &middot; <span id="timerLabelFav">Loading...</span></div>
+<div class="timer-info"><span id="timerLabelFav">Loading...</span></div>
 </div>
 <div id="cardsFavContainer"></div>
 </div>
@@ -1638,17 +1639,20 @@ function renderCards(containerId,list,query,allowDrag){
 
 function toggleCardMenu(event,oi){
   event.stopPropagation();
+  var thisCard=event.target.closest('.card');
   document.querySelectorAll('.card').forEach(function(c){
-    c.classList.remove('menu-open');
+    if(c!==thisCard)c.classList.remove('menu-open');
   });
   document.querySelectorAll('.card-dropdown').forEach(function(el){
-    if(el.id!=='dropdown-'+oi){el.classList.remove('show');}
+    if(!thisCard||!thisCard.contains(el)){el.classList.remove('show');}
   });
-  var d=document.getElementById('dropdown-'+oi);
+  var d=thisCard?thisCard.querySelector('.card-dropdown'):null;
   if(d){
     d.classList.toggle('show');
     if(d.classList.contains('show')){
-      d.closest('.card').classList.add('menu-open');
+      thisCard.classList.add('menu-open');
+    }else{
+      thisCard.classList.remove('menu-open');
     }
   }
 }
@@ -2302,24 +2306,28 @@ function dEnd(e){
 
 /* Touch drag support for mobile */
 var touchDragEl=null,touchDragOi=null,touchClone=null,touchStartX=0,touchStartY=0,touchOffsetX=0,touchOffsetY=0;
+
+function cleanupTouchDrag(){
+  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('dragging','drag-over')});
+  if(touchClone&&touchClone.parentNode)touchClone.parentNode.removeChild(touchClone);
+  touchClone=null;touchDragEl=null;touchDragOi=null;
+}
+
 document.addEventListener('touchstart',function(e){
   var handle=e.target.closest('.drag-handle');
   if(!handle)return;
   var card=handle.closest('.card');
   if(!card)return;
   e.preventDefault();
+  // Clean up any previous stuck drag
+  if(touchClone)cleanupTouchDrag();
   touchDragEl=card;
   touchDragOi=parseInt(card.dataset.oi);
   touchStartX=e.touches[0].clientX;
   touchStartY=e.touches[0].clientY;
   // Create visual clone
   touchClone=card.cloneNode(true);
-  touchClone.style.position='fixed';
-  touchClone.style.width=card.offsetWidth+'px';
-  touchClone.style.opacity='0.8';
-  touchClone.style.zIndex='999';
-  touchClone.style.pointerEvents='none';
-  touchClone.style.transform='rotate(2deg)';
+  touchClone.style.cssText='position:fixed;opacity:0.8;z-index:999;pointer-events:none;transform:rotate(2deg);width:'+card.offsetWidth+'px;';
   var rect=card.getBoundingClientRect();
   touchOffsetX=touchStartX-rect.left;
   touchOffsetY=touchStartY-rect.top;
@@ -2335,7 +2343,6 @@ document.addEventListener('touchmove',function(e){
   var touch=e.touches[0];
   touchClone.style.left=(touch.clientX-touchOffsetX)+'px';
   touchClone.style.top=(touch.clientY-touchOffsetY)+'px';
-  // Highlight target
   var el=document.elementFromPoint(touch.clientX,touch.clientY);
   document.querySelectorAll('.card').forEach(function(c){c.classList.remove('drag-over')});
   if(el){var tc=el.closest('.card');if(tc&&tc!==touchDragEl)tc.classList.add('drag-over')}
@@ -2346,9 +2353,11 @@ document.addEventListener('touchend',function(e){
   var touch=e.changedTouches[0];
   var el=document.elementFromPoint(touch.clientX,touch.clientY);
   if(el){var tc=el.closest('.card');if(tc&&tc!==touchDragEl){var targetOi=parseInt(tc.dataset.oi);if(touchDragOi!==null&&targetOi!==touchDragOi)doReorder(touchDragOi,targetOi)}}
-  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('dragging','drag-over')});
-  if(touchClone&&touchClone.parentNode)touchClone.parentNode.removeChild(touchClone);
-  touchClone=null;touchDragEl=null;touchDragOi=null;
+  cleanupTouchDrag();
+});
+
+document.addEventListener('touchcancel',function(){
+  cleanupTouchDrag();
 });
 
 var reorderTimeout=null;
