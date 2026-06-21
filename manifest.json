@@ -1,0 +1,26 @@
+{
+  "name": "Hi-Vault",
+  "short_name": "Hi-Vault",
+  "description": "Secure Institutional-Grade 2FA Vault",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#faf9ff",
+  "theme_color": "#003d9b",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230052cc'/%3E%3Cstop offset='100%25' stop-color='%23003d9b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z' fill='%23fff'/%3E%3Ccircle cx='44' cy='18' r='6' fill='%2300c853'/%3E%3Cpath d='M41.5 18l1.5 1.5 3-3' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230052cc'/%3E%3Cstop offset='100%25' stop-color='%23003d9b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='192' height='192' rx='42' fill='url(%23g)'/%3E%3Cpath d='M60 66h18v60H60zM78 90h36v18H78zM114 66h18v60h-18z' fill='%23fff'/%3E%3Ccircle cx='132' cy='54' r='18' fill='%2300c853'/%3E%3Cpath d='M124.5 54l7.5 7.5 15-15' stroke='%23fff' stroke-width='4.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230052cc'/%3E%3Cstop offset='100%25' stop-color='%23003d9b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Cpath d='M160 176h48v160h-48zM208 240h96v48h-96zM304 176h48v160h-48z' fill='%23fff'/%3E%3Ccircle cx='352' cy='144' r='48' fill='%2300c853'/%3E%3Cpath d='M332 144l16 16 32-32' stroke='%23fff' stroke-width='12' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

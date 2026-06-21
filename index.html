@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>Hi-Vault</title>
+<!-- Hi-Vault PWA Meta Tags & Manifest -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#003d9b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hi-Vault">
+<!-- Hi-Vault Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230052cc'/%3E%3Cstop offset='100%25' stop-color='%23003d9b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z' fill='%23fff'/%3E%3Ccircle cx='44' cy='18' r='6' fill='%2300c853'/%3E%3Cpath d='M41.5 18l1.5 1.5 3-3' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+:root{--surface:#faf9ff;--surface-dim:#ccdaff;--surface-container-lowest:#fff;--surface-container-low:#f1f3ff;--surface-container:#e9edff;--surface-container-high:#e1e8ff;--surface-container-highest:#d8e2ff;--on-surface:#051a3e;--on-surface-variant:#434654;--inverse-surface:#1d3054;--inverse-on-surface:#edf0ff;--outline:#737685;--outline-variant:#c3c6d6;--surface-tint:#0c56d0;--primary:#003d9b;--on-primary:#fff;--primary-container:#0052cc;--on-primary-container:#c4d2ff;--inverse-primary:#b2c5ff;--secondary:#006c47;--on-secondary:#fff;--secondary-container:#8af5be;--on-secondary-container:#00714b;--tertiary:#7b2600;--on-tertiary:#fff;--tertiary-container:#a33500;--error:#ba1a1a;--on-error:#fff;--error-container:#ffdad6;--background:#faf9ff;--on-background:#051a3e;--surface-variant:#d8e2ff}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{height:100%;-webkit-tap-highlight-color:transparent}
+body{font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:24px;background:var(--background);color:var(--on-background);height:100%;overflow:hidden}
+::selection{background:var(--primary-container);color:var(--on-primary-container)}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+input{font-family:inherit}
+.ms{font-family:'Material Symbols Outlined';font-size:24px;font-weight:normal;font-style:normal;display:inline-block;line-height:1;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:'liga'}
+.ms-fill{font-variation-settings:'FILL' 1}
+
+/* ===== SHELL ===== */
+.shell{display:flex;height:100vh;width:100%}
+
+/* ===== SIDEBAR ===== */
+.sidebar{width:260px;min-width:260px;background:var(--surface-container-low);border-right:1px solid var(--outline-variant);display:flex;flex-direction:column;padding:24px;box-shadow:4px 0 24px rgba(9,30,66,.04);z-index:30;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.sidebar-header{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.sidebar-logo{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,61,155,.15);overflow:hidden;flex-shrink:0}
+.sidebar-logo svg{width:40px;height:40px}
+.sidebar-brand h1{font-family:Manrope,sans-serif;font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-.02em;line-height:1.2}
+.sidebar-brand p{font-family:Inter;font-size:11px;color:var(--on-surface-variant);margin-top:1px}
+.sidebar-nav{flex:1;display:flex;flex-direction:column;gap:4px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:500;color:var(--on-surface-variant);transition:all .15s;text-decoration:none;cursor:pointer}
+.nav-item:hover{background:var(--surface-container-high)}
+.nav-item.active{background:var(--secondary-container);color:var(--on-secondary-container);font-weight:700;box-shadow:0 1px 4px rgba(0,108,71,.1)}
+.sidebar-bottom{margin-top:auto;padding-top:20px;border-top:1px solid var(--outline-variant)}
+.btn-logout{display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;color:var(--error);transition:all .15s}
+.btn-logout:hover{background:var(--error-container)}
+.btn-logout .ms{font-size:20px}
+
+/* Overlay */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(5,26,62,.4);z-index:25;opacity:0;transition:opacity .3s}
+.sidebar-overlay.show{display:block;opacity:1}
+
+/* ===== MAIN ===== */
+.main{flex:1;display:flex;flex-direction:column;height:100%;overflow-y:auto;position:relative}
+.main-bg{position:absolute;top:0;right:0;width:384px;height:384px;background:var(--primary-container);border-radius:50%;filter:blur(128px);opacity:.2;pointer-events:none}
+.main-inner{max-width:100%;width:100%;padding:40px;position:relative;z-index:1}
+
+/* Topbar mobile */
+.topbar{display:none;align-items:center;gap:12px;padding:12px 16px;background:var(--surface-container-low);border-bottom:1px solid var(--outline-variant);position:sticky;top:0;z-index:15}
+.topbar-btn{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--on-surface)}
+.topbar-btn:hover{background:var(--surface-container-high)}
+.topbar-title{font-family:Manrope;font-size:18px;font-weight:700;color:var(--primary);flex:1}
+
+/* ===== PAGE HEADER ===== */
+.page-header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:16px;margin-bottom:24px;border-bottom:1px solid rgba(195,198,214,.5);flex-wrap:wrap;gap:16px}
+.page-title{font-family:Manrope;font-size:32px;font-weight:600;line-height:40px;color:var(--on-surface);letter-spacing:-.02em}
+.page-subtitle{font-size:16px;color:var(--on-surface-variant);margin-top:6px}
+.page-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-box{position:relative}
+.search-box .ms{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--outline);font-size:20px}
+.search-box input{padding:10px 16px 10px 42px;background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:999px;color:var(--on-surface);font-size:14px;outline:none;width:220px;transition:border-color .2s,box-shadow .2s}
+.search-box input::placeholder{color:var(--on-surface-variant)}
+.search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,61,155,.08)}
+.btn-sort,.btn-primary-sm{padding:10px 16px;border-radius:999px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .15s}
+.btn-sort{background:var(--surface-container-low);color:var(--on-surface-variant);border:1px solid var(--outline-variant)}
+.btn-sort:hover{background:var(--surface-container-high);border-color:var(--outline)}
+.btn-sort.active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.btn-sort .ms{font-size:18px}
+.btn-primary-sm{background:var(--primary);color:var(--on-primary);box-shadow:0 2px 8px rgba(0,61,155,.15)}
+.btn-primary-sm:hover{background:var(--primary-container)}
+.btn-primary-sm .ms{font-size:18px}
+
+/* ===== TIMER BAR ===== */
+.timer-bar{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:14px;background:var(--surface-container-low);border:1px solid var(--outline-variant);margin-bottom:24px}
+.timer-ring-g{position:relative;width:44px;height:44px;flex-shrink:0}
+.timer-ring-g svg{transform:rotate(-90deg)}
+.timer-ring-g .rbg{stroke:var(--surface-variant);fill:none;stroke-width:3}
+.timer-ring-g .rfg{fill:none;stroke-width:3;stroke-linecap:round;stroke:var(--primary);transition:stroke-dashoffset .4s linear,stroke .3s}
+.timer-ring-g .rnum{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--on-surface)}
+.timer-ring-g.urgent .rfg{stroke:var(--error)}
+.timer-ring-g.urgent .rnum{color:var(--error)}
+.timer-info{font-size:13px;color:var(--on-surface-variant);flex:1}
+.timer-info strong{color:var(--on-surface)}
+
+/* ===== CARDS GRID ===== */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--surface);border:1px solid var(--outline-variant);border-top:4px solid var(--outline-variant);border-radius:14px;padding:24px;display:flex;flex-direction:column;position:relative;overflow:visible;cursor:pointer;box-shadow:0 4px 20px rgba(9,30,66,.06);transition:all .2s;user-select:none;z-index:1}
+.card.menu-open{z-index:20}
+.card:hover{box-shadow:0 8px 30px rgba(9,30,66,.12);border-color:var(--outline);border-top-color:var(--primary)}
+.card.fav{border-top-color:var(--secondary)}
+.card:active{transform:scale(.98)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.card-identity{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.card-icon{width:48px;height:48px;border-radius:10px;background:var(--surface-container-low);border:1px solid rgba(195,198,214,.5);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(9,30,66,.06);flex-shrink:0}
+.card-icon .ms{font-size:26px;color:var(--primary)}
+.card-info{min-width:0;flex:1}
+.card-label{font-family:Manrope;font-size:17px;font-weight:600;color:var(--on-surface);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--on-surface-variant);margin-top:2px}
+.card-menu-container{position:relative;flex-shrink:0}
+.card-dropdown{display:none;position:absolute;right:0;top:36px;background:var(--surface-container-lowest);border:1px solid var(--outline-variant);border-radius:10px;box-shadow:0 8px 24px rgba(9,30,66,0.15);z-index:100;min-width:140px;padding:6px 0}
+.card-dropdown.show{display:block}
+.dropdown-item{display:flex;align-items:center;gap:10px;width:100%;padding:8px 16px;font-size:13px;font-weight:500;color:var(--on-surface);text-align:left;transition:background 0.1s;cursor:pointer}
+.dropdown-item:hover{background:var(--surface-container-low)}
+.dropdown-item .ms{font-size:18px;color:var(--outline)}
+.card-btn{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--outline);transition:all .15s}
+.card-btn:hover{background:var(--surface-container-high);color:var(--on-surface)}
+.card-btn.fav-active{color:#f59e0b}
+.card-btn .ms{font-size:20px}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(195,198,214,.3);padding-top:16px;margin-top:auto}
+.card-code{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;letter-spacing:.1em;color:var(--primary);display:flex;align-items:center;gap:12px;transition:color .2s}
+.card-code .copy-icon{font-size:18px;color:var(--outline);opacity:0.3;transition:all .2s;font-family:'Material Symbols Outlined';font-weight:normal;margin-left:2px}
+.card:hover .card-code .copy-icon{opacity:0.7;color:var(--primary)}
+.card:hover .card-code{color:var(--primary-container)}
+.card-ring{position:relative;width:48px;height:48px;flex-shrink:0}
+.card-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.card-ring .rbg{stroke:var(--surface-variant);fill:none;stroke-width:3}
+.card-ring .rfg{fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .4s linear,stroke .3s}
+.card-ring .rnum{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--on-surface)}
+.card-copied{position:absolute;top:12px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--secondary-container);color:var(--on-secondary-container);font-size:11px;font-weight:700;padding:4px 12px;border-radius:6px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
+.card-copied.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Drag styles */
+.card.dragging{opacity:.5;box-shadow:0 12px 40px rgba(9,30,66,.2);z-index:50}
+.card.drag-over{border:2px dashed var(--primary);background:var(--surface-container-low)}
+.drag-handle{cursor:grab;color:var(--outline-variant);transition:color .15s}
+.drag-handle:hover{color:var(--on-surface)}
+.drag-handle:active{cursor:grabbing}
+
+/* ===== EMPTY STATE ===== */
+.empty-state{text-align:center;padding:64px 20px;color:var(--on-surface-variant)}
+.empty-state .ms{font-size:56px;color:var(--outline-variant);margin-bottom:16px}
+.empty-state p{font-size:15px;margin-top:8px}
+
+/* ===== LOADING ===== */
+.loading{text-align:center;padding:64px;color:var(--outline)}
+.spinner{width:36px;height:36px;border:3px solid var(--surface-variant);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== VIEWS ===== */
+.view{display:none}
+.view.active{display:block}
+
+/* ===== SETTINGS VIEW ===== */
+.settings-card{background:var(--surface);border:1px solid var(--outline-variant);border-radius:14px;padding:32px;max-width:560px;box-shadow:0 4px 20px rgba(9,30,66,.06)}
+.settings-card h3{font-family:Manrope;font-size:18px;font-weight:700;color:var(--on-surface);margin-bottom:6px}
+.settings-card p{font-size:13px;color:var(--on-surface-variant);margin-bottom:20px}
+.settings-field{margin-bottom:20px}
+.settings-field label{display:block;font-size:13px;font-weight:600;color:var(--on-surface);margin-bottom:6px}
+.settings-field input{width:100%;padding:12px 16px;background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:10px;color:var(--on-surface);font-size:14px;outline:none;transition:border-color .2s}
+.settings-field input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,61,155,.08)}
+.settings-field .hint{font-size:11px;color:var(--outline);margin-top:6px;line-height:1.5}
+.btn-settings-save{padding:12px 28px;border-radius:10px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,61,155,.15);transition:background .15s}
+.btn-settings-save:hover{background:var(--primary-container)}
+.settings-status{font-size:13px;color:var(--secondary);margin-top:12px;opacity:0;transition:opacity .3s}
+.settings-status.show{opacity:1}
+
+/* ===== LOGIN SCREEN ===== */
+.screen-login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:var(--background)}
+.login-card{width:100%;max-width:400px;text-align:center;background:var(--surface);border:1px solid var(--outline-variant);border-radius:16px;padding:48px 40px;box-shadow:0 4px 20px rgba(9,30,66,.08)}
+.login-logo{width:72px;height:72px;margin:0 auto 20px;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(0,61,155,.2)}
+.login-logo svg{width:100%;height:100%;display:block}
+.login-title{font-family:Manrope;font-size:24px;font-weight:700;color:var(--on-surface)}
+.login-sub{font-size:13px;color:var(--on-surface-variant);margin-top:6px}
+.login-field{margin-top:28px}
+.login-field input{width:100%;padding:14px 18px;background:var(--surface-container-low);border:2px solid var(--outline-variant);border-radius:12px;color:var(--on-surface);font-family:'JetBrains Mono';font-size:15px;text-align:center;letter-spacing:2px;outline:none;transition:border-color .2s}
+.login-field input::placeholder{color:var(--outline);letter-spacing:0;font-family:Inter}
+.login-field input:focus{border-color:var(--primary)}
+.login-field input.error{border-color:var(--error);animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.login-btn{width:100%;margin-top:14px;padding:14px;border-radius:12px;background:var(--primary);color:var(--on-primary);font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(0,61,155,.2);transition:background .15s}
+.login-btn:hover{background:var(--primary-container)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.login-error{color:var(--error);font-size:13px;margin-top:14px;opacity:0;transition:opacity .2s}
+.login-error.show{opacity:1}
+.login-setup{margin-top:24px;padding-top:20px;border-top:1px solid var(--outline-variant)}
+.login-setup summary{font-size:12px;color:var(--outline);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:4px}
+.login-setup summary::-webkit-details-marker{display:none}
+.login-setup summary .ms{font-size:16px}
+.login-setup input{width:100%;margin-top:12px;padding:10px 14px;background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:8px;color:var(--on-surface);font-size:12px;outline:none}
+.login-setup input:focus{border-color:var(--primary)}
+.login-setup .setup-save{margin-top:8px;padding:8px 16px;border-radius:8px;background:var(--secondary);color:var(--on-secondary);font-size:12px;font-weight:600}
+.login-setup .setup-hint{font-size:11px;color:var(--outline);margin-top:8px;line-height:1.5}
+.screen-app{display:none}
+
+/* ===== MODAL ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(5,26,62,.5);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:16px;padding:32px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(9,30,66,.2);animation:modalIn .25s ease-out}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal h3{font-family:Manrope;font-size:20px;font-weight:700;color:var(--on-surface);margin-bottom:4px}
+.modal p{font-size:13px;color:var(--on-surface-variant);margin-bottom:24px}
+.modal-field{margin-bottom:16px}
+.modal-field label{display:block;font-size:13px;font-weight:600;color:var(--on-surface);margin-bottom:6px}
+.modal-field input{width:100%;padding:12px 16px;background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:10px;color:var(--on-surface);font-size:14px;outline:none}
+.modal-field input:focus{border-color:var(--primary)}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}
+.modal-btns .btn-cancel{padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;color:var(--on-surface-variant);background:var(--surface-container-high);transition:background .15s}
+.modal-btns .btn-cancel:hover{background:var(--surface-container-highest)}
+.modal-btns .btn-confirm{padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;color:var(--on-primary);background:var(--primary);box-shadow:0 2px 8px rgba(0,61,155,.15);transition:background .15s}
+.modal-btns .btn-confirm:hover{background:var(--primary-container)}
+.modal-btns .btn-danger{padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;color:var(--on-error);background:var(--error);box-shadow:0 2px 8px rgba(186,26,26,.2);transition:opacity .15s}
+.modal-btns .btn-danger:hover{opacity:.85}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--secondary-container);color:var(--on-secondary-container);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:200;transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--error-container);color:var(--error)}
+.toast .ms{font-size:18px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){.cards-grid{grid-template-columns:repeat(2,1fr)}.page-title{font-size:26px;line-height:34px}}
+@media(max-width:768px){
+.sidebar{position:fixed;top:0;left:0;height:100%;transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.topbar{display:flex}
+.main-inner{padding:20px 16px}
+.cards-grid{grid-template-columns:1fr;gap:14px}
+.page-header{flex-direction:column;align-items:stretch;gap:12px}
+.page-title{font-size:22px;line-height:30px}
+.page-subtitle{font-size:14px}
+.page-actions{gap:8px}
+.search-box{flex:1}.search-box input{width:100%}
+.card{padding:12px 16px}
+.card-top{margin-bottom:8px}
+.card-icon{width:36px;height:36px}
+.card-icon .ms{font-size:20px}
+.card-label{font-size:15px}
+.card-btn{width:28px;height:28px}
+.card-btn .ms{font-size:16px}
+.card-dropdown{top:30px;min-width:130px}
+.dropdown-item{padding:6px 12px;font-size:12px}
+.card-bottom{padding-top:8px;margin-top:8px}
+.card-code{font-size:28px;gap:8px}
+.card-ring{width:36px;height:36px}
+.card-ring svg{width:100%;height:100%}
+.card-ring .rnum{font-size:11px}
+.timer-bar{padding:12px 16px;gap:12px}
+.login-card{padding:36px 24px}
+.modal{margin:16px;padding:24px}
+.settings-card{padding:24px}
+.status-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;padding:4px 8px;border-radius:999px;transition:all .3s}
+.status-badge.online{background:rgba(0,108,71,0.08);color:var(--secondary)}
+.status-badge.online .dot{background:var(--secondary)}
+.status-badge.offline{background:rgba(186,26,26,0.08);color:var(--error)}
+.status-badge.offline .dot{background:var(--error)}
+.status-badge .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+}
+@media(max-width:380px){.card-code{font-size:24px;letter-spacing:.08em;gap:8px}}
+</style>
+</head>
+<body>
+
+<!-- Splash Screen / Loading -->
+<div id="splashScreen" style="position:fixed;inset:0;background:var(--background);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.4s ease-out;">
+  <div class="login-logo" style="margin:0 auto 0;">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="lgs" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0052cc"/><stop offset="100%" stop-color="#003d9b"/></linearGradient></defs>
+      <rect width="64" height="64" rx="14" fill="url(#lgs)"/>
+      <path d="M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z" fill="#fff"/>
+      <circle cx="44" cy="18" r="6" fill="#00c853"/>
+      <path d="M41.5 18l1.5 1.5 3-3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h2 style="font-family:Manrope;font-size:24px;font-weight:700;color:var(--primary);margin-top:20px;">Hi-Vault</h2>
+  <p style="font-size:13px;color:var(--on-surface-variant);margin-top:8px;">Initializing secure storage...</p>
+  <div class="spinner" style="margin-top:24px;width:30px;height:30px;"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span class="ms ms-fill" id="toastIcon">check_circle</span><span id="toastText"></span></div>
+
+<!-- Add Account Modal -->
+<div class="modal-overlay" id="modalAdd">
+<div class="modal">
+<h3>Add New Account</h3>
+<p>Enter the account label and the 2FA secret key.</p>
+<div class="modal-field"><label>Account Name</label><input type="text" id="addLabel" placeholder="e.g. Google, GitHub, AWS..."></div>
+<div class="modal-field"><label>Secret Key (Base32)</label><input type="text" id="addSecret" placeholder="e.g. JBSWY3DPEHPK3PXP" style="font-family:'JetBrains Mono';letter-spacing:1px"></div>
+
+<!-- QR Scan/Upload options inside Add modal -->
+<div class="modal-field" style="margin-top:16px; border-top:1px dashed var(--outline-variant); padding-top:16px;">
+  <label>Or Scan/Upload QR Code</label>
+  <div style="display:flex; gap:10px;">
+    <button class="btn-sort" onclick="startQRScanner()" style="flex:1; justify-content:center; padding:8px 12px; font-size:12px;"><span class="ms">photo_camera</span> Scan Camera</button>
+    <button class="btn-sort" onclick="document.getElementById('qrFileInput').click()" style="flex:1; justify-content:center; padding:8px 12px; font-size:12px;"><span class="ms">upload_file</span> Upload Image</button>
+  </div>
+  <input type="file" id="qrFileInput" accept="image/*" style="display:none;" onchange="uploadQR(event)">
+</div>
+<!-- Scanner container -->
+<div id="qrScannerContainer" style="display:none; margin-top:16px; position:relative;">
+  <div id="qrReader" style="width:100%; border-radius:12px; overflow:hidden; border:1px solid var(--outline-variant);"></div>
+  <button class="btn-lock-small" onclick="stopQRScanner()" style="margin:8px auto 0; background:var(--error-container); color:var(--error); width:fit-content; padding:6px 12px;"><span class="ms" style="font-size:14px;">close</span> Close Camera</button>
+</div>
+
+<div class="modal-btns">
+<button class="btn-cancel" onclick="closeModal('modalAdd')">Cancel</button>
+<button class="btn-confirm" onclick="doAddAccount()">Add Account</button>
+</div>
+</div>
+</div>
+
+<!-- Edit Account Modal -->
+<div class="modal-overlay" id="modalEdit">
+<div class="modal">
+<h3>Edit Account</h3>
+<p>Modify account details or view your secret key.</p>
+<div class="modal-field"><label>Account Name</label><input type="text" id="editLabel" placeholder="e.g. Google, GitHub..."></div>
+<div class="modal-field">
+  <label>Secret Key (Base32)</label>
+  <div style="position:relative; display:flex;">
+    <input type="password" id="editSecret" placeholder="Secret Key" style="font-family:'JetBrains Mono';letter-spacing:1px; flex:1; padding-right:40px; height:44px; border:1px solid var(--outline-variant); border-radius:10px; background:var(--surface-container-low); padding-left:16px; font-size:14px; outline:none;">
+    <button onclick="toggleViewSecret()" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--outline); display:flex; align-items:center; justify-content:center; height:32px; width:32px;"><span class="ms" id="eyeIcon" style="font-size:20px;">visibility</span></button>
+  </div>
+</div>
+<div class="modal-btns">
+<button class="btn-cancel" onclick="closeModal('modalEdit')">Cancel</button>
+<button class="btn-confirm" onclick="doEditAccount()">Save Changes</button>
+</div>
+</div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal-overlay" id="modalQR">
+<div class="modal" style="text-align:center;">
+<h3>Export QR Code</h3>
+<p id="qrDesc">Scan this code with an authenticator app.</p>
+<div style="margin:20px 0; display:flex; justify-content:center;"><canvas id="qrCanvas" style="border: 8px solid #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);"></canvas></div>
+<div class="modal-field"><label>Secret Key</label><input type="text" id="qrSecretText" readonly style="text-align:center; font-family:'JetBrains Mono'; background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:8px; padding:10px; width:100%; outline:none;"></div>
+<div class="modal-btns" style="justify-content:center; gap:10px;">
+<button class="btn-confirm" onclick="downloadQR()"><span class="ms" style="font-size:16px; vertical-align:middle; margin-right:4px;">download</span> Download QR</button>
+<button class="btn-cancel" onclick="closeModal('modalQR')">Close</button>
+</div>
+</div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="modalDelete">
+<div class="modal">
+<h3>Delete Account</h3>
+<p>Are you sure you want to delete <strong id="deleteLabel">this account</strong>? This cannot be undone.</p>
+<div class="modal-btns">
+<button class="btn-cancel" onclick="closeModal('modalDelete')">Cancel</button>
+<button class="btn-danger" onclick="doDeleteAccount()">Delete</button>
+</div>
+</div>
+</div>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="screen-login" id="screenLogin">
+<div class="login-card">
+<div class="login-logo">
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0052cc"/><stop offset="100%" stop-color="#003d9b"/></linearGradient></defs>
+<rect width="64" height="64" rx="14" fill="url(#lg)"/>
+<path d="M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z" fill="#fff"/>
+<circle cx="44" cy="18" r="6" fill="#00c853"/>
+<path d="M41.5 18l1.5 1.5 3-3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+<div class="login-title">Hi-Vault</div>
+<div class="login-sub">Enter your credentials to unlock</div>
+<div class="login-field" style="margin-top:20px; display:flex; flex-direction:column; gap:12px;">
+  <input type="text" id="userInput" placeholder="Username" style="font-family:Inter; letter-spacing:0; text-align:center;">
+  <input type="password" id="pwInput" placeholder="Password">
+</div>
+<button class="login-btn" id="pwBtn" onclick="submitPw()">Unlock</button>
+<div class="login-error" id="pwError"></div>
+
+<!-- Quick Links for Guest Access -->
+<div style="margin-top:16px; margin-bottom:12px; display:flex; gap:12px; justify-content:center; font-size:13px; font-weight:600; flex-wrap:wrap;">
+  <button onclick="showPublicView('live')" style="color:var(--primary); display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"><span class="ms" style="font-size:16px;">offline_bolt</span> Live 2FA</button>
+  <span style="color:var(--outline-variant);">|</span>
+  <button onclick="showPublicView('tutorial')" style="color:var(--primary); display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"><span class="ms" style="font-size:16px;">menu_book</span> Setup Tutorial</button>
+  <span id="pwaDividerLogin" style="color:var(--outline-variant); display:none;">|</span>
+  <button id="btnInstallPwaLogin" onclick="triggerPwaInstall()" style="color:var(--secondary); display:none; align-items:center; gap:4px; font-weight:600; cursor:pointer;"><span class="ms" style="font-size:16px; color:var(--secondary);">download</span> Install App</button>
+</div>
+
+<div class="login-setup">
+<details id="loginSetupDetails">
+<summary><span class="ms">settings</span> API Configuration</summary>
+<input type="url" id="apiUrlInputLogin" placeholder="https://script.google.com/macros/s/.../exec">
+<button class="setup-save" onclick="saveApiUrlFromLogin()">Save URL</button>
+<div class="setup-hint">Paste your Google Apps Script Web App URL.<br>Deploy &gt; New deployment &gt; Web app &gt; Copy URL</div>
+</details>
+</div>
+</div>
+</div>
+
+<!-- ===== APP SCREEN ===== -->
+<div class="screen-app shell" id="screenApp">
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="sidebar-logo">
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0052cc"/><stop offset="100%" stop-color="#003d9b"/></linearGradient></defs>
+<rect width="64" height="64" rx="14" fill="url(#lg2)"/>
+<path d="M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z" fill="#fff"/>
+<circle cx="44" cy="18" r="6" fill="#00c853"/>
+<path d="M41.5 18l1.5 1.5 3-3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+<div class="sidebar-brand">
+  <h1>Hi-Vault</h1>
+  <p>Secure 2FA Manager</p>
+  <div class="status-badge online" id="sidebarStatus" style="margin-top:6px;">
+    <span class="dot"></span>
+    <span class="text">Connected</span>
+  </div>
+</div>
+</div>
+<div class="sidebar-nav">
+<a class="nav-item active private-nav" data-view="accounts" onclick="switchView('accounts')"><span class="ms ms-fill">shield_person</span> All Accounts</a>
+<a class="nav-item private-nav" data-view="favorites" onclick="switchView('favorites')"><span class="ms">star</span> Favorites</a>
+<a class="nav-item public-nav" data-view="live" onclick="switchView('live')"><span class="ms">offline_bolt</span> Live 2FA</a>
+<a class="nav-item private-nav" data-view="impexp" onclick="switchView('impexp')"><span class="ms">import_export</span> Import &amp; Export</a>
+<a class="nav-item private-nav" data-view="settings" onclick="switchView('settings')"><span class="ms">settings</span> Settings</a>
+<a class="nav-item public-nav" data-view="tutorial" onclick="switchView('tutorial')"><span class="ms">menu_book</span> Tutorial</a>
+<a class="nav-item public-nav" id="btnInstallPwaSidebar" onclick="triggerPwaInstall()" style="display:none; color:var(--secondary); font-weight:700;"><span class="ms" style="color:var(--secondary);">download</span> Install App</a>
+</div>
+<div class="sidebar-bottom" style="display:flex; flex-direction:column; gap:16px;">
+  <div id="sidebarUserSection" style="display:flex; align-items:center; gap:10px; padding:0 8px;">
+    <div style="width:32px; height:32px; border-radius:50%; background:var(--surface-container-high); display:flex; align-items:center; justify-content:center; border:1px solid var(--outline-variant); flex-shrink:0;">
+      <span class="ms" style="font-size:18px; color:var(--outline);">person</span>
+    </div>
+    <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+      <div id="sidebarUsername" style="font-size:13px; font-weight:700; color:var(--on-surface);">mrhisyammm</div>
+    </div>
+  </div>
+  <button class="btn-logout" id="btnSidebarLogout" onclick="lockApp()"><span class="ms">logout</span> Logout</button>
+  <button class="btn-logout" id="btnSidebarLogin" onclick="goBackToLogin()" style="color:var(--primary); display:none;"><span class="ms" style="color:var(--primary);">login</span> Back to Login</button>
+</div>
+</nav>
+
+<!-- Main -->
+<div class="main">
+<div class="topbar">
+<button class="topbar-btn" onclick="openSidebar()"><span class="ms">menu</span></button>
+<div class="topbar-title" style="display:flex; align-items:center; gap:8px;">
+  Hi-Vault
+  <div class="status-badge online" id="topbarStatus">
+    <span class="dot"></span>
+    <span class="text">Connected</span>
+  </div>
+</div>
+</div>
+<div class="main-bg"></div>
+<div class="main-inner">
+
+<!-- VIEW: All Accounts -->
+<div class="view active" id="viewAccounts">
+<header class="page-header">
+<div><h2 class="page-title">All Accounts</h2><p class="page-subtitle">Access your two-factor authentication tokens securely.</p></div>
+<div class="page-actions">
+<div class="search-box"><span class="ms">search</span><input type="text" id="searchInput" placeholder="Search accounts..." oninput="renderView()"></div>
+<button class="btn-sort" id="btnSortAZ" onclick="toggleSort('az')" title="Sort A-Z"><span class="ms">sort_by_alpha</span><span class="sort-label">A-Z</span></button>
+<button class="btn-primary-sm" onclick="openModal('modalAdd')"><span class="ms">add</span> Add</button>
+</div>
+</header>
+<div class="timer-bar">
+<div class="timer-ring-g" id="timerRing"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="rbg" cx="22" cy="22" r="18"/><circle class="rfg" id="timerArc" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="0"/></svg><div class="rnum" id="timerNum">30</div></div>
+<div class="timer-info"><strong>Auto-refresh</strong> every 30 seconds &middot; <span id="timerLabel">Loading...</span></div>
+</div>
+<div id="cardsContainer"><div class="loading"><div class="spinner"></div>Loading accounts...</div></div>
+</div>
+
+<!-- VIEW: Favorites -->
+<div class="view" id="viewFavorites">
+<header class="page-header">
+<div><h2 class="page-title">Favorites</h2><p class="page-subtitle">Your starred accounts for quick access.</p></div>
+<div class="page-actions">
+<div class="search-box"><span class="ms">search</span><input type="text" id="searchFav" placeholder="Search favorites..." oninput="renderView()"></div>
+</div>
+</header>
+<div class="timer-bar">
+<div class="timer-ring-g" id="timerRingFav"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="rbg" cx="22" cy="22" r="18"/><circle class="rfg" id="timerArcFav" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="0"/></svg><div class="rnum" id="timerNumFav">30</div></div>
+<div class="timer-info"><strong>Auto-refresh</strong> every 30 seconds &middot; <span id="timerLabelFav">Loading...</span></div>
+</div>
+<div id="cardsFavContainer"></div>
+</div>
+
+<!-- VIEW: Live 2FA -->
+<div class="view" id="viewLive">
+<header class="page-header">
+<div><h2 class="page-title">Live 2FA Decoder</h2><p class="page-subtitle">Instantly generate OTP codes from any secret key without saving.</p></div>
+</header>
+<div class="settings-card" style="max-width:560px;">
+  <h3>Live TOTP Generator</h3>
+  <p>Input your Base32 secret key below to decode the current 6-digit OTP code in real-time.</p>
+  <div class="settings-field">
+    <label>Secret Key (Base32)</label>
+    <input type="text" id="liveSecretInput" placeholder="e.g. JBSWY3DPEHPK3PXP" oninput="updateLiveTOTP()" style="font-family:'JetBrains Mono'; letter-spacing: 1px; text-transform: uppercase;">
+    <div style="display:flex; gap:10px; margin-top:12px;">
+      <button class="btn-sort" onclick="startLiveQRScanner()"><span class="ms">photo_camera</span> Scan QR Code</button>
+      <button class="btn-sort" onclick="document.getElementById('liveQrFileInput').click()"><span class="ms">upload_file</span> Upload QR Image</button>
+    </div>
+    <input type="file" id="liveQrFileInput" accept="image/*" style="display:none;" onchange="uploadLiveQR(event)">
+    <div id="liveQrScannerContainer" style="display:none; margin-top:16px; position:relative;">
+      <div id="liveQrReader" style="width:100%; border-radius:12px; overflow:hidden; border:1px solid var(--outline-variant);"></div>
+      <button class="btn-lock-small" onclick="stopLiveQRScanner()" style="margin:8px auto 0; background:var(--error-container); color:var(--error); width:fit-content; padding:6px 12px;"><span class="ms" style="font-size:14px;">close</span> Close Camera</button>
+    </div>
+  </div>
+  
+  <!-- Live Preview Card -->
+  <div class="card" id="livePreviewCard" style="margin-top:24px; max-width:400px; cursor:pointer;" onclick="copyLiveCode()">
+    <div class="card-copied" id="copiedLive">Copied!</div>
+    <div class="card-top">
+      <div class="card-identity">
+        <div class="card-icon"><span class="ms" style="color:var(--primary);">offline_bolt</span></div>
+        <div>
+          <div class="card-label">Live Decoder</div>
+          <div class="card-sub" id="liveSecretMasked">No key entered</div>
+        </div>
+      </div>
+      <button class="card-btn" id="btnLiveSaveCard" onclick="event.stopPropagation(); saveLiveToMyAccounts()" title="Add to My Accounts" style="display:none; color:var(--primary);"><span class="ms">add_circle</span></button>
+    </div>
+    <div class="card-bottom">
+      <div class="card-code" id="liveCode"><span>---</span><span>---</span><span class="ms copy-icon">content_copy</span></div>
+      <div class="card-ring" id="liveRing">
+        <svg width="48" height="48" viewBox="0 0 44 44">
+          <circle class="rbg" cx="22" cy="22" r="18"/>
+          <circle class="rfg" id="liveArc" cx="22" cy="22" r="18" stroke="var(--primary)" stroke-dasharray="113.1" stroke-dashoffset="0"/>
+        </svg>
+        <div class="rnum" id="liveNum">30</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- VIEW: Tutorial -->
+<div class="view" id="viewTutorial">
+<header class="page-header">
+<div><h2 class="page-title">Setup Tutorial</h2><p class="page-subtitle">Learn how to configure your Google Sheets backend to get the Web App URL.</p></div>
+</header>
+
+<div class="settings-card" style="max-width:800px; margin-bottom:24px;">
+<h3>1. Create Google Sheet &amp; Apps Script</h3>
+<p>Create a new Google Spreadsheet on your Google Drive and open the script editor.</p>
+<ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
+  <li>Create a new Google Sheet at <a href="https://sheets.new" target="_blank" style="color:var(--primary); font-weight:600;">sheets.new</a>.</li>
+  <li>Rename the active sheet tab at the bottom-left corner to <strong>2FA Vault</strong>.</li>
+  <li>Click on the menu bar: <strong>Extensions &gt; Apps Script</strong>. This opens the script editor in a new tab.</li>
+</ol>
+</div>
+
+<div class="settings-card" style="max-width:800px; margin-bottom:24px;">
+<h3>2. Copy &amp; Paste Backend Code</h3>
+<p>Copy the code below, paste it into the editor, and configure your credentials.</p>
+<div style="margin-top:12px; margin-bottom:12px;">
+  <button class="btn-primary-sm" onclick="copyGasCode()" style="padding:8px 16px; font-size:12px;"><span class="ms" style="font-size:16px;">content_copy</span> Copy Code</button>
+</div>
+<pre style="background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:10px; padding:16px; font-family:'JetBrains Mono',monospace; font-size:11px; max-height:240px; overflow:auto; color:var(--on-surface-variant); white-space:pre-wrap; word-break:break-all;" id="gasCodePre">Loading script code...</pre>
+<ol style="margin-top:12px; margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
+  <li>Delete all default code inside the editor (usually <code>function myFunction() { ... }</code>).</li>
+  <li>Paste the copied script code into the editor.</li>
+  <li><strong>Important:</strong> Find lines 1 &amp; 2 in the editor:
+    <pre style="background:var(--surface-container-high); padding:6px 12px; border-radius:6px; margin:6px 0; font-family:'JetBrains Mono'; font-size:12px; display:inline-block; letter-spacing:0.5px;">var WEB_APP_USERNAME = "user";
+var WEB_APP_PASSWORD = "password";</pre>
+    Change these values at the very top of the editor to secure your vault!
+  </li>
+  <li>Click the <strong>Save project</strong> button (💾 Disk Icon) at the top.</li>
+</ol>
+</div>
+
+<div class="settings-card" style="max-width:800px; margin-bottom:24px;">
+<h3>3. Format the Spreadsheet</h3>
+<p>Run the setup function to format columns and set formulas automatically.</p>
+<ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
+  <li>Select the function <strong>setupSheet</strong> from the dropdown menu at the top (next to Debug/Run).</li>
+  <li>Click the <strong>Run</strong> (▶️) button.</li>
+  <li>An authorization prompt will appear. Click <strong>Review Permissions</strong>, select your Google Account, click <strong>Advanced</strong> (at the bottom), and choose <strong>Go to 2FA Vault (unsafe)</strong>. Then click <strong>Allow</strong>.</li>
+  <li>Verify that your Google Sheet has been automatically formatted with headings and checkboxes. You can now close the Apps Script tab.</li>
+</ol>
+</div>
+
+<div class="settings-card" style="max-width:800px; margin-bottom:24px;">
+<h3>4. Deploy as Web App</h3>
+<p>Deploy the script publicly so the Vercel app can communicate with it.</p>
+<ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
+  <li>In the Apps Script editor, click the blue <strong>Deploy &gt; New deployment</strong> button at the top-right.</li>
+  <li>Click the gear icon (⚙️) next to "Select type" and select <strong>Web app</strong>.</li>
+  <li>Enter a description (e.g., <code>Hi-Vault API</code>).</li>
+  <li>Execute as: <strong>Me (your email)</strong>.</li>
+  <li>Who has access: <strong>Anyone</strong> (this is required to connect to the spreadsheet from Vercel).</li>
+  <li>Click <strong>Deploy</strong>, then copy the generated <strong>Web app URL</strong>.</li>
+</ol>
+</div>
+
+<div class="settings-card" style="max-width:800px; margin-bottom:24px;">
+<h3>5. Connect to Hi-Vault</h3>
+<p>Connect your frontend web application to the spreadsheet backend.</p>
+<ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
+  <li>Go to the <strong>Settings</strong> tab in Hi-Vault.</li>
+  <li>Paste the Web App URL into the <strong>Web App URL</strong> input field.</li>
+  <li>Click <strong>Save &amp; Reload</strong>.</li>
+  <li>Log in with the username and password you configured in Step 2!</li>
+</ol>
+</div>
+</div>
+
+<!-- VIEW: Settings -->
+<div class="view" id="viewSettings">
+<header class="page-header">
+<div><h2 class="page-title">Settings</h2><p class="page-subtitle">Configure your Hi-Vault connection.</p></div>
+</header>
+<div class="settings-card">
+<h3>API Connection</h3>
+<p>Enter the Google Apps Script Web App URL to connect to your 2FA data.</p>
+<div class="settings-field">
+<label>Web App URL</label>
+<input type="url" id="settingsApiUrl" placeholder="https://script.google.com/macros/s/.../exec">
+<div class="hint">Deploy your Google Apps Script as a Web App, then paste the URL here.<br>Deploy &gt; New deployment &gt; Web app &gt; Execute as: Me &gt; Access: Anyone</div>
+</div>
+<button class="btn-settings-save" onclick="saveSettingsApi()">Save &amp; Reload</button>
+<div class="settings-status" id="settingsStatus">Saved successfully!</div>
+</div>
+</div>
+
+<!-- VIEW: Import & Export -->
+<div class="view" id="viewImpExp">
+<header class="page-header">
+<div><h2 class="page-title">Import &amp; Export</h2><p class="page-subtitle">Transfer multiple accounts between Hi-Vault, Excel, and Authenticator Apps.</p></div>
+</header>
+<div class="settings-card">
+<h3>Data Transfer</h3>
+<p>Backup all data or import from CSV or Authenticator QR Code.</p>
+<div style="display:flex; flex-direction:column; gap:16px;">
+  <div>
+    <label style="display:block; font-size:11px; font-weight:700; color:var(--outline); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Export Options</label>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn-sort" onclick="downloadCSV()"><span class="ms">download</span> Export to CSV (Excel)</button>
+      <button class="btn-sort" onclick="exportAllToQR()"><span class="ms">qr_code</span> Export All to QR Code</button>
+    </div>
+  </div>
+  <div>
+    <label style="display:block; font-size:11px; font-weight:700; color:var(--outline); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Import Options</label>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn-sort" onclick="document.getElementById('csvFileInput').click()"><span class="ms">upload_file</span> Import from CSV</button>
+      <button class="btn-sort" onclick="startSettingsQRScanner()"><span class="ms">photo_camera</span> Scan QR Code</button>
+      <button class="btn-sort" onclick="document.getElementById('gaFileInput').click()"><span class="ms">upload</span> Upload QR Image</button>
+    </div>
+    <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="importCSV(event)">
+    <input type="file" id="gaFileInput" accept="image/*" style="display:none;" onchange="importGoogleAuthQR(event)">
+  </div>
+  <div id="settingsQrScannerContainer" style="display:none; position:relative; max-width:320px; margin-top:8px;">
+    <div id="settingsQrReader" style="width:100%; border-radius:12px; overflow:hidden; border:1px solid var(--outline-variant);"></div>
+    <button class="btn-lock-small" onclick="stopSettingsQRScanner()" style="margin:8px auto 0; background:var(--error-container); color:var(--error); width:fit-content; padding:6px 12px;"><span class="ms" style="font-size:14px;">close</span> Close Camera</button>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+/* ===== GAS CODE FOR TUTORIAL ===== */
+var gasCode=`var WEB_APP_USERNAME = "user";
+var WEB_APP_PASSWORD = "password";
+
+function base32Decode(input) {
+  if (!input) return [];
+  var a = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  var s = input.toString().replace(/[\s=-]/g, "").toUpperCase();
+  var bits = "";
+  for (var i = 0; i < s.length; i++) {
+    var v = a.indexOf(s[i]);
+    if (v >= 0) bits += ("00000" + v.toString(2)).slice(-5);
+  }
+  var bytes = [];
+  for (var i = 0; i + 8 <= bits.length; i += 8) bytes.push(parseInt(bits.substring(i, i + 8), 2));
+  return bytes;
+}
+
+function intToBytes(n) {
+  var b = [0,0,0,0,0,0,0,0];
+  for (var i = 7; i >= 0; i--) { b[i] = n & 0xff; n = Math.floor(n / 256); }
+  return b;
+}
+
+function generateTOTP(secret) {
+  if (!secret) return "";
+  var keyBytes = base32Decode(secret);
+  if (keyBytes.length === 0) return "INVALID";
+  var counter = Math.floor(Math.floor(new Date().getTime() / 1000) / 30);
+  var hmac = Utilities.computeHmacSignature(Utilities.MacAlgorithm.HMAC_SHA_1, intToBytes(counter), keyBytes);
+  var hash = hmac.map(function(b) { return b < 0 ? b + 256 : b; });
+  var o = hash[hash.length - 1] & 0x0f;
+  var bin = ((hash[o]&0x7f)<<24)|((hash[o+1]&0xff)<<16)|((hash[o+2]&0xff)<<8)|(hash[o+3]&0xff);
+  var code = (bin % 1000000).toString();
+  while (code.length < 6) code = "0" + code;
+  return code;
+}
+
+function TOTP(secret, _refresh) {
+  if (!secret || secret === "") return "";
+  return generateTOTP(secret.toString().replace(/\s/g, "").toUpperCase());
+}
+
+function refreshCodes() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("2FA Vault");
+  if (!sheet) sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  sheet.getRange("Z1").setValue(new Date().getTime());
+}
+
+function onEdit(e) {
+  try {
+    var sheet = e.range.getSheet();
+    var name = sheet.getName();
+    if (name === "2FA Vault" || name === "Sheet1") {
+      var r = e.range.getRow();
+      var c = e.range.getColumn();
+      if (r >= 3) {
+        if (c === 2) {
+          var val = e.range.getValue().toString().trim();
+          if (val !== "") {
+            sheet.getRange(r, 3).setFormula('=IF(B' + r + '="","",TOTP(B' + r + ',Z$1))');
+            if (sheet.getRange(r, 4).getValue() === "") sheet.getRange(r, 4).setValue(false);
+          }
+        }
+        if (c === 1) {
+          var bVal = sheet.getRange(r, 2).getValue().toString().trim();
+          if (bVal !== "" && sheet.getRange(r, 3).getFormula() === "") {
+            sheet.getRange(r, 3).setFormula('=IF(B' + r + '="","",TOTP(B' + r + ',Z$1))');
+            if (sheet.getRange(r, 4).getValue() === "") sheet.getRange(r, 4).setValue(false);
+          }
+        }
+      }
+    }
+    if (e.range.getA1Notation() === "A1") {
+      refreshCodes();
+      SpreadsheetApp.flush();
+      e.range.setValue(false);
+    }
+  } catch(err) {}
+}
+
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu("🔐 Hi-Vault")
+    .addItem("Refresh Codes", "refreshCodes")
+    .addItem("Stop Auto-Refresh", "stopAutoRefresh")
+    .addToUi();
+}
+
+function startAutoRefresh() {
+  stopAutoRefresh();
+  ScriptApp.newTrigger("refreshCodes").timeBased().everyMinutes(1).create();
+}
+
+function stopAutoRefresh() {
+  var t = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < t.length; i++) if (t[i].getHandlerFunction() === "refreshCodes") ScriptApp.deleteTrigger(t[i]);
+}
+
+function _getSheet() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("2FA Vault");
+  if (!sheet) sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  return sheet;
+}
+
+function _getNextRow() {
+  var sheet = _getSheet();
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 3) return 3;
+  var values = sheet.getRange(3, 1, lastRow - 2, 1).getValues();
+  for (var i = 0; i < values.length; i++) {
+    if (values[i][0].toString().trim() === "") {
+      return i + 3;
+    }
+  }
+  return values.length + 3;
+}
+
+function _getAccounts() {
+  var sheet = _getSheet();
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 3) return [];
+  var data = sheet.getRange(3, 1, lastRow - 2, 4).getValues();
+  var accounts = [];
+  for (var i = 0; i < data.length; i++) {
+    if (data[i][0] && data[i][1]) {
+      accounts.push({
+        label: data[i][0].toString(),
+        secret: data[i][1].toString().replace(/\s/g, "").toUpperCase(),
+        fav: data[i][3] === true || data[i][3] === "TRUE",
+        row: i + 3
+      });
+    }
+  }
+  return accounts;
+}
+
+function _addAccount(label, secret) {
+  var sheet = _getSheet();
+  var newRow = _getNextRow();
+  sheet.getRange(newRow, 1).setValue(label);
+  sheet.getRange(newRow, 2).setValue(secret.replace(/\s/g, "").toUpperCase());
+  sheet.getRange(newRow, 3).setFormula('=IF(B' + newRow + '="","",TOTP(B' + newRow + ',Z$1))');
+  sheet.getRange(newRow, 4).setValue(false);
+  return { success: true, row: newRow };
+}
+
+function _deleteAccount(row) {
+  var sheet = _getSheet();
+  row = parseInt(row);
+  if (row < 3 || row > sheet.getLastRow()) return { success: false, error: "Invalid row" };
+  sheet.deleteRow(row);
+  var lastRow = sheet.getLastRow();
+  for (var i = 3; i <= lastRow; i++) {
+    sheet.getRange(i, 3).setFormula('=IF(B' + i + '="","",TOTP(B' + i + ',Z$1))');
+  }
+  return { success: true };
+}
+
+function _toggleFavorite(row) {
+  var sheet = _getSheet();
+  row = parseInt(row);
+  if (row < 3 || row > sheet.getLastRow()) return { success: false, error: "Invalid row" };
+  var current = sheet.getRange(row, 4).getValue();
+  var newVal = !(current === true || current === "TRUE");
+  sheet.getRange(row, 4).setValue(newVal);
+  return { success: true, fav: newVal };
+}
+
+// REST OF THE API CODE
+function _editAccount(row, label, secret) {
+  var sheet = _getSheet();
+  row = parseInt(row);
+  if (row < 3 || row > sheet.getLastRow()) return { success: false, error: "Invalid row" };
+  sheet.getRange(row, 1).setValue(label);
+  sheet.getRange(row, 2).setValue(secret.replace(/\s/g, "").toUpperCase());
+  sheet.getRange(row, 3).setFormula('=IF(B' + row + '="","",TOTP(B' + row + ',Z$1))');
+  return { success: true };
+}
+
+function _reorderAccounts(newOrder) {
+  var sheet = _getSheet();
+  var rows = JSON.parse(newOrder);
+  if (!Array.isArray(rows) || rows.length === 0) return { success: false, error: "Invalid order" };
+  var allData = [];
+  for (var i = 0; i < rows.length; i++) {
+    var r = parseInt(rows[i]);
+    var label = sheet.getRange(r, 1).getValue();
+    var secret = sheet.getRange(r, 2).getValue();
+    var fav = sheet.getRange(r, 4).getValue();
+    allData.push([label, secret, fav]);
+  }
+  for (var i = 0; i < allData.length; i++) {
+    var targetRow = 3 + i;
+    sheet.getRange(targetRow, 1).setValue(allData[i][0]);
+    sheet.getRange(targetRow, 2).setValue(allData[i][1]);
+    sheet.getRange(targetRow, 3).setFormula('=IF(B' + targetRow + '="","",TOTP(B' + targetRow + ',Z$1))');
+    sheet.getRange(targetRow, 4).setValue(allData[i][2]);
+  }
+  return { success: true };
+}
+
+function _importAccounts(items) {
+  var sheet = _getSheet();
+  var startRow = _getNextRow();
+  for (var i = 0; i < items.length; i++) {
+    var row = startRow + i;
+    sheet.getRange(row, 1).setValue(items[i].label);
+    sheet.getRange(row, 2).setValue(items[i].secret.replace(/\s/g, "").toUpperCase());
+    sheet.getRange(row, 3).setFormula('=IF(B' + row + '="","",TOTP(B' + row + ',Z$1))');
+    sheet.getRange(row, 4).setValue(false);
+  }
+  return { success: true, count: items.length };
+}
+
+function _jsonResponse(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function _handleRequest(params) {
+  var action = params.action || "";
+  var user = params.user || "";
+  var pw = params.pw || "";
+  if (action === "login") {
+    return { success: user === WEB_APP_USERNAME && pw === WEB_APP_PASSWORD };
+  }
+  if (user !== WEB_APP_USERNAME || pw !== WEB_APP_PASSWORD) {
+    return { success: false, error: "Unauthorized" };
+  }
+  switch (action) {
+    case "accounts": return { success: true, accounts: _getAccounts() };
+    case "add":
+      var label = params.label || "";
+      var secret = params.secret || "";
+      if (!label || !secret) return { success: false, error: "Missing label or secret" };
+      return _addAccount(label, secret);
+    case "delete":
+      var row = params.row;
+      if (!row) return { success: false, error: "Missing row" };
+      return _deleteAccount(row);
+    case "favorite":
+      var frow = params.row;
+      if (!frow) return { success: false, error: "Missing row" };
+      return _toggleFavorite(frow);
+    case "edit":
+      var erow = params.row;
+      var elabel = params.label || "";
+      var esecret = params.secret || "";
+      if (!erow || !elabel || !esecret) return { success: false, error: "Missing fields" };
+      return _editAccount(erow, elabel, esecret);
+    case "import":
+      var accountsJson = params.accounts;
+      if (!accountsJson) return { success: false, error: "Missing accounts data" };
+      var items = JSON.parse(accountsJson);
+      if (!Array.isArray(items)) return { success: false, error: "Data must be an array" };
+      return _importAccounts(items);
+    case "reorder":
+      var order = params.rows;
+      if (!order) return { success: false, error: "Missing rows" };
+      return _reorderAccounts(order);
+    default:
+      return { info: "Hi-Vault API" };
+  }
+}
+
+function doGet(e) {
+  var params = (e && e.parameter) ? e.parameter : {};
+  return _jsonResponse(_handleRequest(params));
+}
+
+function doPost(e) {
+  try {
+    var body = JSON.parse(e.postData.contents);
+    return _jsonResponse(_handleRequest(body));
+  } catch(err) {
+    return _jsonResponse({ success: false, error: err.toString() });
+  }
+}
+
+function setupSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
+  sheet.setName("2FA Vault");
+  var maxCols = sheet.getMaxColumns();
+  if (maxCols < 26) {
+    sheet.insertColumnsAfter(maxCols, 26 - maxCols);
+  }
+  var maxRows = sheet.getMaxRows();
+  if (maxRows < 100) {
+    sheet.insertRowsAfter(maxRows, 100 - maxRows);
+  }
+  var lastRow = Math.max(sheet.getLastRow(), 3);
+  var existingData = sheet.getRange(3, 1, lastRow - 2, 4).getValues();
+  sheet.clear();
+  sheet.getRange("A1:Z" + lastRow).setFontFamily("Google Sans");
+  sheet.setRowHeight(1, 32);
+  sheet.getRange("A1:D1").setBackground("#e8fce8");
+  sheet.getRange("A1").setValue(false);
+  sheet.getRange("A1").insertCheckboxes();
+  sheet.getRange("A1").setHorizontalAlignment("center").setVerticalAlignment("middle");
+  var rl = sheet.getRange("B1:D1"); rl.merge();
+  rl.setValue("Check to refresh all OTP codes");
+  rl.setFontSize(9).setFontColor("#2d7a2d").setFontWeight("bold").setVerticalAlignment("middle");
+  var h = sheet.getRange("A2:D2");
+  h.setValues([["Label", "2FA Secret Key", "OTP Code", "Fav"]]);
+  h.setFontWeight("bold").setFontSize(10).setFontColor("#ffffff");
+  h.setBackground("#1a1a2e").setHorizontalAlignment("center").setVerticalAlignment("middle");
+  sheet.setRowHeight(2, 36);
+  h.setBorder(null, null, true, null, null, null, "#6366f1", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+  sheet.setFrozenRows(2);
+  sheet.setColumnWidth(1, 280);
+  sheet.setColumnWidth(2, 380);
+  sheet.setColumnWidth(3, 130);
+  sheet.setColumnWidth(4, 50);
+  sheet.getRange("A3:D100").setVerticalAlignment("middle");
+  sheet.getRange("A3:A100").setFontFamily("Roboto Mono").setFontSize(14).setFontWeight("bold").setFontColor("#1a1a2e");
+  sheet.getRange("B3:B100").setFontFamily("Roboto Mono").setFontSize(9).setFontColor("#888888");
+  sheet.getRange("C3:C100").setFontFamily("Roboto Mono").setFontSize(14).setFontWeight("bold")
+    .setFontColor("#1a1a2e").setHorizontalAlignment("center").setBackground("#f0f0ff");
+  sheet.getRange("D3:D100").setHorizontalAlignment("center");
+  for (var i = 3; i <= 100; i++) {
+    sheet.setRowHeight(i, 32);
+    sheet.getRange("A" + i + ":D" + i).setBackground(i % 2 === 1 ? "#fafafa" : "#ffffff");
+  }
+  sheet.getRange("A2:D100").setBorder(true, true, true, true, false, true, "#e0e0e0", SpreadsheetApp.BorderStyle.SOLID);
+  sheet.getRange(3, 1, existingData.length, 4).setValues(existingData);
+  for (var i = 3; i <= 2 + existingData.length; i++) {
+    sheet.getRange(i, 3).setFormula('=IF(B' + i + '="","",TOTP(B' + i + ',Z$1))');
+    var favVal = sheet.getRange(i, 4).getValue();
+    if (favVal === "" || favVal === null) {
+      sheet.getRange(i, 4).setValue(false);
+    }
+  }
+  sheet.hideColumns(26);
+  sheet.getRange("Z1").setValue(new Date().getTime());
+  if (sheet.getMaxColumns() > 4) {
+    sheet.hideColumns(5, 21);
+  }
+  stopAutoRefresh();
+  ScriptApp.newTrigger("refreshCodes").timeBased().everyMinutes(1).create();
+  SpreadsheetApp.getUi().alert(
+    "✅ Hi-Vault ready!\n\n" +
+    "Deploy as Web App:\n" +
+    "Deploy → New deployment → Web app\n" +
+    "Execute as: Me | Access: Anyone"
+  );
+}`;
+
+function copyGasCode() {
+  navigator.clipboard.writeText(gasCode).then(function() {
+    showToast('Apps Script code copied to clipboard!');
+  });
+}
+
+/* ===== STATE ===== */
+var accounts=[], codes=[], username='', password='', currentView='accounts';
+var sortMode='none'; // none | az | za
+var deleteTarget=null;
+var CIRC=2*Math.PI*18;
+var tickInterval=null;
+var dragSrcIndex=null;
+var qrDownloadFilename='';
+var isLoggedIn=false;
+
+/* ===== ICON MAP ===== */
+var IM={'google':{i:'mail',c:'#4285F4'},'gmail':{i:'mail',c:'#EA4335'},'github':{i:'code',c:'#24292e'},'aws':{i:'cloud',c:'#ff9900'},'amazon':{i:'shopping_cart',c:'#ff9900'},'slack':{i:'forum',c:'#4A154B'},'discord':{i:'headset_mic',c:'#5865F2'},'twitter':{i:'alternate_email',c:'#1DA1F2'},'x.com':{i:'alternate_email',c:'#000'},'facebook':{i:'thumb_up',c:'#1877F2'},'meta':{i:'thumb_up',c:'#1877F2'},'microsoft':{i:'window',c:'#00A4EF'},'azure':{i:'cloud_queue',c:'#0078D4'},'apple':{i:'phone_iphone',c:'#555'},'dropbox':{i:'cloud_upload',c:'#0061FF'},'binance':{i:'currency_bitcoin',c:'#F0B90B'},'coinbase':{i:'currency_exchange',c:'#0052FF'},'steam':{i:'sports_esports',c:'#1b2838'},'telegram':{i:'send',c:'#26A5E4'},'whatsapp':{i:'chat',c:'#25D366'},'instagram':{i:'photo_camera',c:'#E4405F'},'linkedin':{i:'work',c:'#0A66C2'},'cloudflare':{i:'security',c:'#F38020'},'digitalocean':{i:'water_drop',c:'#0080FF'},'digital ocean':{i:'water_drop',c:'#0080FF'},'vercel':{i:'deployed_code',c:'#000'},'netlify':{i:'web',c:'#00C7B7'},'stripe':{i:'payments',c:'#635BFF'},'paypal':{i:'account_balance_wallet',c:'#00457C'},'reddit':{i:'forum',c:'#FF4500'},'wordpress':{i:'edit_note',c:'#21759B'},'shopify':{i:'storefront',c:'#7AB55C'},'figma':{i:'draw',c:'#F24E1E'},'notion':{i:'description',c:'#000'},'bitwarden':{i:'key',c:'#175DDC'},'lastpass':{i:'password',c:'#D32D27'},'1password':{i:'lock',c:'#0572EC'},'tiktok':{i:'music_note',c:'#000'},'youtube':{i:'play_circle',c:'#FF0000'},'twitch':{i:'live_tv',c:'#9146FF'},'epic':{i:'sports_esports',c:'#000'},'riot':{i:'sports_esports',c:'#D32936'},'proton':{i:'mail',c:'#6D4AFF'},'okta':{i:'verified_user',c:'#007DC1'},'jira':{i:'bug_report',c:'#0052CC'},'atlassian':{i:'dashboard',c:'#0052CC'},'heroku':{i:'cloud',c:'#430098'}};
+function getIcon(label){var l=label.toLowerCase();for(var k in IM)if(l.indexOf(k)!==-1)return IM[k];return{i:'shield_person',c:'var(--primary)'}}
+
+/* ===== INDEXEDDB WRAPPER ===== */
+const DB_NAME = 'hv_db';
+const DB_VERSION = 1;
+
+function getDB() {
+  return new Promise(function(resolve, reject) {
+    var req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = function(e) {
+      var db = e.target.result;
+      if (!db.objectStoreNames.contains('config')) db.createObjectStore('config');
+      if (!db.objectStoreNames.contains('queue')) db.createObjectStore('queue', { keyPath: 'id' });
+    };
+    req.onsuccess = function(e) { resolve(e.target.result); };
+    req.onerror = function(e) { reject(e.target.error); };
+  });
+}
+
+function dbGet(store, key) {
+  return getDB().then(function(db) {
+    return new Promise(function(resolve) {
+      var tx = db.transaction(store, 'readonly');
+      var req = tx.objectStore(store).get(key);
+      req.onsuccess = function() { resolve(req.result); };
+      req.onerror = function() { resolve(null); };
+    });
+  });
+}
+
+function dbPut(store, key, val) {
+  return getDB().then(function(db) {
+    return new Promise(function(resolve) {
+      var tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).put(val, key);
+      tx.oncomplete = function() { resolve(); };
+    });
+  });
+}
+
+function dbDelete(store, key) {
+  return getDB().then(function(db) {
+    return new Promise(function(resolve) {
+      var tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).delete(key);
+      tx.oncomplete = function() { resolve(); };
+    });
+  });
+}
+
+function dbGetAll(store) {
+  return getDB().then(function(db) {
+    return new Promise(function(resolve) {
+      var tx = db.transaction(store, 'readonly');
+      var req = tx.objectStore(store).getAll();
+      req.onsuccess = function() { resolve(req.result || []); };
+      req.onerror = function() { resolve([]); };
+    });
+  });
+}
+
+/* ===== CRYPTO ENCRYPTION (AES-GCM) ===== */
+async function deriveKey(password, salt) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(password),
+    "PBKDF2",
+    false,
+    ["deriveBits", "deriveKey"]
+  );
+  return crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: enc.encode(salt),
+      iterations: 100000,
+      hash: "SHA-256"
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt", "decrypt"]
+  );
+}
+
+async function encryptData(plaintext, password, salt) {
+  try {
+    const key = await deriveKey(password, salt);
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const enc = new TextEncoder();
+    const ciphertext = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: iv },
+      key,
+      enc.encode(plaintext)
+    );
+    const ivBase64 = btoa(String.fromCharCode.apply(null, iv));
+    const ciphertextBase64 = btoa(String.fromCharCode.apply(null, new Uint8Array(ciphertext)));
+    return ivBase64 + ":" + ciphertextBase64;
+  } catch(e) {
+    console.error("Encryption failed:", e);
+    return "";
+  }
+}
+
+async function decryptData(encryptedStr, password, salt) {
+  try {
+    const parts = encryptedStr.split(":");
+    if (parts.length !== 2) throw new Error("Invalid encrypted format");
+    const iv = new Uint8Array(atob(parts[0]).split("").map(c => c.charCodeAt(0)));
+    const ciphertext = new Uint8Array(atob(parts[1]).split("").map(c => c.charCodeAt(0)));
+    const key = await deriveKey(password, salt);
+    const decrypted = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: iv },
+      key,
+      ciphertext
+    );
+    return new TextDecoder().decode(decrypted);
+  } catch(e) {
+    console.error("Decryption failed:", e);
+    return "";
+  }
+}
+
+/* ===== PERSISTENCE ===== */
+function getApiUrl(){return localStorage.getItem('hv_api_url')||''}
+function setApiUrl(u){localStorage.setItem('hv_api_url',u);dbPut('config','api_url',u)}
+function getSavedUser(){try{return localStorage.getItem('hv_user')||''}catch(e){return''}}
+function setSavedUser(u){localStorage.setItem('hv_user',u);dbPut('config','user',u)}
+function getSavedPw(){try{return localStorage.getItem('hv_pw')||''}catch(e){return''}}
+function setSavedPw(p){localStorage.setItem('hv_pw',p);dbPut('config','pw',p)}
+function clearSavedCreds(){try{localStorage.removeItem('hv_user');localStorage.removeItem('hv_pw');dbDelete('config','user');dbDelete('config','pw')}catch(e){}}
+
+/* ===== API ===== */
+async function api(action, extra){
+  var base=getApiUrl();
+  if(!base)throw new Error('API URL not configured');
+  var params='?action='+encodeURIComponent(action)+'&user='+encodeURIComponent(username)+'&pw='+encodeURIComponent(password);
+  if(extra)for(var k in extra)params+='&'+encodeURIComponent(k)+'='+encodeURIComponent(extra[k]);
+  var controller=new AbortController();
+  var timeoutId=setTimeout(function(){controller.abort()},10000);
+  try{
+    var res=await fetch(base+params,{signal:controller.signal});
+    clearTimeout(timeoutId);
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    return await res.json();
+  }catch(e){
+    clearTimeout(timeoutId);
+    if(e.name==='AbortError')throw new Error('API connection timed out. Please check your Web App URL and deployment.');
+    throw e;
+  }
+}
+
+/* ===== TOTP ===== */
+function b32d(s){var a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',t=s.replace(/[\s=-]/g,'').toUpperCase(),b='';for(var i=0;i<t.length;i++){var v=a.indexOf(t[i]);if(v>=0)b+=('00000'+v.toString(2)).slice(-5)}var r=[];for(var i=0;i+8<=b.length;i+=8)r.push(parseInt(b.substring(i,i+8),2));return new Uint8Array(r)}
+async function hmac1(k,m){var key=await crypto.subtle.importKey('raw',k,{name:'HMAC',hash:'SHA-1'},false,['sign']);return new Uint8Array(await crypto.subtle.sign('HMAC',key,m))}
+async function totp(secret){var k=b32d(secret),c=Math.floor(Math.floor(Date.now()/1000)/30),buf=new ArrayBuffer(8);new DataView(buf).setUint32(4,c,false);var h=await hmac1(k,new Uint8Array(buf)),o=h[h.length-1]&0x0f,bin=((h[o]&0x7f)<<24)|((h[o+1]&0xff)<<16)|((h[o+2]&0xff)<<8)|(h[o+3]&0xff),r=(bin%1000000).toString();while(r.length<6)r='0'+r;return r}
+
+/* ===== LOGIN ===== */
+document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')submitPw()});
+document.getElementById('userInput').addEventListener('keydown',function(e){if(e.key==='Enter')submitPw()});
+
+function hideSplash(){
+  var s = document.getElementById('splashScreen');
+  if(s){
+    s.style.opacity = 0;
+    setTimeout(function(){ s.style.display = 'none'; }, 400);
+  }
+}
+
+/* ===== PWA INSTALLATION ===== */
+var deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  var btnLogin = document.getElementById('btnInstallPwaLogin');
+  var divLogin = document.getElementById('pwaDividerLogin');
+  if (btnLogin) btnLogin.style.display = 'inline-flex';
+  if (divLogin) divLogin.style.display = 'inline-flex';
+  var btnSidebar = document.getElementById('btnInstallPwaSidebar');
+  if (btnSidebar) btnSidebar.style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', function(evt) {
+  console.log('App installed successfully');
+  hidePwaInstallButtons();
+});
+
+function triggerPwaInstall() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(choiceResult) {
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the PWA install prompt');
+    } else {
+      console.log('User dismissed the PWA install prompt');
+    }
+    deferredPrompt = null;
+    hidePwaInstallButtons();
+  });
+}
+
+function hidePwaInstallButtons() {
+  var btnLogin = document.getElementById('btnInstallPwaLogin');
+  var divLogin = document.getElementById('pwaDividerLogin');
+  var btnSidebar = document.getElementById('btnInstallPwaSidebar');
+  if (btnLogin) btnLogin.style.display = 'none';
+  if (divLogin) divLogin.style.display = 'none';
+  if (btnSidebar) btnSidebar.style.display = 'none';
+}
+
+(function initLogin(){
+  var gPre=document.getElementById('gasCodePre');
+  if(gPre)gPre.textContent=gasCode;
+  if(tickInterval)clearInterval(tickInterval);
+  tickInterval=setInterval(tick,500);
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js').then(function(reg) {
+        console.log('SW registered');
+      }).catch(function(err) {
+        console.error('SW registration failed:', err);
+      });
+    });
+  }
+  var saved=getApiUrl();
+  if(saved){
+    document.getElementById('apiUrlInputLogin').value=saved;
+    var su=getSavedUser();
+    if(su){document.getElementById('userInput').value=su}
+    var sp=getSavedPw();
+    if(su && sp){username=su;password=sp;doAutoLogin()}
+    else{hideSplash()}
+  }else{
+    hideSplash();
+    document.getElementById('loginSetupDetails').open = true;
+  }
+})();
+
+async function doAutoLogin(){
+  try{
+    var d=await api('login');
+    if(d.success){
+      isLoggedIn=true;
+      document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
+      document.getElementById('sidebarUserSection').style.display='flex';
+      document.getElementById('btnSidebarLogout').style.display='flex';
+      document.getElementById('btnSidebarLogin').style.display='none';
+      document.getElementById('screenLogin').style.display='none';
+      document.getElementById('screenApp').style.display='flex';
+      loadAccounts();
+    }else{clearSavedCreds();username='';password=''}
+  }catch(e){clearSavedCreds();username='';password=''}
+  hideSplash();
+}
+
+async function submitPw(){
+  var user=document.getElementById('userInput').value.trim();
+  var pw=document.getElementById('pwInput').value;
+  var inpU=document.getElementById('userInput');
+  var inpP=document.getElementById('pwInput');
+  var err=document.getElementById('pwError');
+  var btn=document.getElementById('pwBtn');
+  if(!getApiUrl()){err.textContent='Configure API URL first (click settings below)';err.classList.add('show');return}
+  if(!user || !pw){err.textContent='Username and password required';err.classList.add('show');return}
+  btn.textContent='Checking...';btn.disabled=true;
+  username=user;
+  password=pw;
+  try{
+    var d=await api('login');
+    if(d.success){
+      isLoggedIn=true;
+      document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
+      document.getElementById('sidebarUserSection').style.display='flex';
+      document.getElementById('btnSidebarLogout').style.display='flex';
+      document.getElementById('btnSidebarLogin').style.display='none';
+      setSavedUser(user);
+      setSavedPw(pw);err.classList.remove('show');
+      document.getElementById('screenLogin').style.display='none';
+      document.getElementById('screenApp').style.display='flex';
+      loadAccounts();
+    }else{
+      inpU.classList.add('error');
+      inpP.classList.add('error');err.textContent='Wrong username or password';err.classList.add('show');
+      setTimeout(function(){inpU.classList.remove('error');inpP.classList.remove('error')},400);
+      username='';password='';
+    }
+  }catch(e){err.textContent='Connection failed: '+e.message;err.classList.add('show');username='';password=''}
+  btn.textContent='Unlock';btn.disabled=false;
+  hideSplash();
+}
+
+function showPublicView(v) {
+  isLoggedIn=false;
+  document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='none'});
+  document.getElementById('sidebarUserSection').style.display='none';
+  document.getElementById('btnSidebarLogout').style.display='none';
+  document.getElementById('btnSidebarLogin').style.display='flex';
+  document.getElementById('screenLogin').style.display='none';
+  document.getElementById('screenApp').style.display='flex';
+  switchView(v);
+}
+
+function goBackToLogin() {
+  document.getElementById('screenApp').style.display='none';
+  document.getElementById('screenLogin').style.display='flex';
+  switchView('accounts');
+}
+
+function saveApiUrlFromLogin(){
+  var u=document.getElementById('apiUrlInputLogin').value.trim();
+  if(u){setApiUrl(u);showToast('API URL saved!')}
+}
+
+/* ===== LOCK ===== */
+function lockApp(){
+  isLoggedIn=false;
+  document.getElementById('screenApp').style.display='none';
+  document.getElementById('screenLogin').style.display='flex';
+  document.getElementById('userInput').value='';
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwError').classList.remove('show');
+  accounts=[];codes=[];username='';password='';clearSavedCreds();
+  document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
+  document.getElementById('sidebarUserSection').style.display='flex';
+  document.getElementById('btnSidebarLogout').style.display='flex';
+  document.getElementById('btnSidebarLogin').style.display='none';
+  if(tickInterval){clearInterval(tickInterval);tickInterval=null}
+  closeSidebar();
+}
+
+/* ===== SIDEBAR ===== */
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarOverlay').classList.add('show')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('show')}
+
+/* ===== VIEW SWITCHING ===== */
+function switchView(v){
+  currentView=v;
+  document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active')});
+  document.querySelectorAll('.nav-item').forEach(function(el){
+    el.classList.remove('active');
+    if(el.querySelector('.ms'))el.querySelector('.ms').classList.remove('ms-fill');
+    if(el.dataset.view===v){el.classList.add('active');if(el.querySelector('.ms'))el.querySelector('.ms').classList.add('ms-fill')}
+  });
+  if(v==='accounts')document.getElementById('viewAccounts').classList.add('active');
+  else if(v==='favorites')document.getElementById('viewFavorites').classList.add('active');
+  else if(v==='live')document.getElementById('viewLive').classList.add('active');
+  else if(v==='impexp')document.getElementById('viewImpExp').classList.add('active');
+  else if(v==='tutorial')document.getElementById('viewTutorial').classList.add('active');
+  else if(v==='settings'){
+    document.getElementById('viewSettings').classList.add('active');
+    document.getElementById('settingsApiUrl').value=getApiUrl();
+  }
+  renderView();
+  closeSidebar();
+}
+
+/* ===== OFFLINE QUEUE & SYNC ===== */
+var isOnline=navigator.onLine;
+var isSyncing=false;
+
+function setOnline(online){
+  isOnline=online;
+  var sb=document.getElementById('sidebarStatus');
+  var tb=document.getElementById('topbarStatus');
+  var bc=online?'status-badge online':'status-badge offline';
+  var bt=online?'Connected':'Offline';
+  [sb,tb].forEach(function(el){
+    if(el){
+      el.className=bc;
+      el.querySelector('.text').textContent=bt;
+    }
+  });
+}
+
+async function addToOfflineQueue(action,params){
+  var id=Date.now();
+  await dbPut('queue',id,{id:id,action:action,params:params});
+  if('serviceWorker' in navigator && 'SyncManager' in window){
+    try{
+      var reg=await navigator.serviceWorker.ready;
+      await reg.sync.register('sync-hv-vault');
+    }catch(e){}
+  }
+}
+
+async function processOfflineQueue(){
+  if(isSyncing||!navigator.onLine)return;
+  var q=await dbGetAll('queue');
+  if(q.length===0)return;
+  isSyncing=true;
+  showToast('Syncing offline changes...',false);
+  var failedCount=0;
+  for(var i=0;i<q.length;i++){
+    var item=q[i];
+    try{
+      var d=await api(item.action,item.params);
+      if(!d.success)throw new Error(d.error);
+      await dbDelete('queue',item.id);
+    }catch(e){
+      failedCount++;
+    }
+  }
+  isSyncing=false;
+  if(failedCount===0){
+    showToast('Sync complete!',false);
+    await loadAccounts();
+  }else{
+    showToast('Some changes failed to sync ('+failedCount+' pending)',true);
+  }
+}
+
+window.addEventListener('online',function(){setOnline(true);processOfflineQueue()});
+window.addEventListener('offline',function(){setOnline(false);showToast('Offline Mode',true)});
+
+async function saveLocalCache() {
+  try {
+    if (password && username) {
+      var encrypted = await encryptData(JSON.stringify(accounts), password, username);
+      localStorage.setItem('hv_cached_accounts', encrypted);
+    }
+  } catch(e) {
+    console.error('Failed to save local cache:', e);
+  }
+}
+
+/* ===== LOAD ACCOUNTS ===== */
+async function loadAccounts(){
+  var userEl=document.getElementById('sidebarUsername');
+  if(userEl)userEl.textContent=username;
+  try{
+    var d=await api('accounts');
+    if(d.success){
+      accounts=d.accounts||[];
+      await saveLocalCache();
+      codes=new Array(accounts.length);
+      await refreshAll();
+      if(tickInterval)clearInterval(tickInterval);
+      tickInterval=setInterval(tick,500);
+      setOnline(true);
+      processOfflineQueue();
+    }else lockApp();
+  }catch(e){
+    var cached=localStorage.getItem('hv_cached_accounts');
+    if(cached){
+      var decrypted=await decryptData(cached,password,username);
+      if(decrypted){
+        accounts=JSON.parse(decrypted);
+        codes=new Array(accounts.length);
+        await refreshAll();
+        if(tickInterval)clearInterval(tickInterval);
+        tickInterval=setInterval(tick,500);
+        setOnline(false);
+        showToast('Offline Mode. Using cached data.',true);
+      }else{
+        document.getElementById('cardsContainer').innerHTML='<div class="empty-state"><span class="ms">error</span><p>Decryption failed or cache is empty</p></div>';
+        setOnline(false);
+      }
+    }else{
+      document.getElementById('cardsContainer').innerHTML='<div class="empty-state"><span class="ms">error</span><p>Failed to load: '+esc(e.message)+'</p></div>';
+      setOnline(false);
+    }
+  }
+}
+
+/* ===== SORT ===== */
+function toggleSort(mode){
+  var btn=document.getElementById('btnSortAZ');
+  if(sortMode==='none'){sortMode='az';btn.classList.add('active');btn.querySelector('.sort-label').textContent='A-Z'}
+  else if(sortMode==='az'){sortMode='za';btn.querySelector('.sort-label').textContent='Z-A'}
+  else{sortMode='none';btn.classList.remove('active');btn.querySelector('.sort-label').textContent='A-Z'}
+  renderView();
+}
+
+function getSortedAccounts(list){
+  var items=list.map(function(a,i){return{a:a,c:codes[accounts.indexOf(a)]||'------',oi:accounts.indexOf(a)};});
+  if(sortMode==='az')items.sort(function(a,b){return a.a.label.localeCompare(b.a.label)});
+  else if(sortMode==='za')items.sort(function(a,b){return b.a.label.localeCompare(a.a.label)});
+  else if(sortMode==='none'){
+    items.sort(function(a,b){
+      if(a.a.fav && !b.a.fav) return -1;
+      if(!a.a.fav && b.a.fav) return 1;
+      return a.oi - b.oi;
+    });
+  }
+  return items;
+}
+
+/* ===== RENDER ===== */
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+function renderView(){
+  if(currentView==='accounts')renderCards('cardsContainer',accounts,document.getElementById('searchInput').value,true);
+  else if(currentView==='favorites'){
+    var favs=accounts.filter(function(a){return a.fav});
+    renderCards('cardsFavContainer',favs,document.getElementById('searchFav').value,false);
+  }
+}
+
+function renderCards(containerId,list,query,allowDrag){
+  var container=document.getElementById(containerId);
+  query=(query||'').toLowerCase();
+  if(!list.length){
+    var isFav=containerId==='cardsFavContainer';
+    if(isFav)container.innerHTML='<div class="empty-state"><span class="ms">star</span><p>No favorites yet. Star an account to see it here.</p></div>';
+    else container.innerHTML='<div class="empty-state"><span class="ms">key</span><p>No accounts yet. Add one to get started.</p></div>';
+    return;
+  }
+  var filtered=list.filter(function(a){return !query||a.label.toLowerCase().indexOf(query)!==-1});
+  var items=getSortedAccounts(filtered);
+  if(!items.length){container.innerHTML='<div class="empty-state"><span class="ms">search_off</span><p>No matching accounts found.</p></div>';return}
+
+  var now=Math.floor(Date.now()/1000),left=30-(now%30),prog=left/30;
+  var dashOff=(CIRC*(1-prog)).toFixed(1);
+  var ringColor=left<=5?'var(--error)':'var(--primary)';
+  var numColor=left<=5?'var(--error)':'var(--on-surface)';
+  var canDrag=allowDrag&&sortMode==='none'&&!query;
+
+  var html='<div class="cards-grid">';
+  for(var x=0;x<items.length;x++){
+    var it=items[x],a=it.a,c=it.c,oi=it.oi;
+    var ico=getIcon(a.label);
+    var c1=c.substring(0,3),c2=c.substring(3);
+    html+='<div class="card'+(a.fav?' fav':'')+'" data-oi="'+oi+'"'+(canDrag?' draggable="true" ondragstart="dStart(event)" ondragover="dOver(event)" ondragenter="dEnter(event)" ondragleave="dLeave(event)" ondrop="dDrop(event)" ondragend="dEnd(event)"':'')+' onclick="copyCode('+oi+')">';
+    html+='<div class="card-copied" id="copied'+oi+'">Copied!</div>';
+    html+='<div class="card-top"><div class="card-identity">';
+    if(canDrag)html+='<div class="drag-handle card-btn" onclick="event.stopPropagation()"><span class="ms">drag_indicator</span></div>';
+    html+='<div class="card-icon"><span class="ms" style="color:'+ico.c+'">'+ico.i+'</span></div>';
+    html+='<div class="card-info"><div class="card-label">'+esc(a.label)+'</div><div class="card-sub">'+esc(a.secret.substring(0,4)+'****')+'</div></div></div>';
+    html+='<div class="card-menu-container"><button class="card-btn" onclick="event.stopPropagation();toggleCardMenu(event,'+oi+')" title="Menu"><span class="ms">more_vert</span></button>';
+    html+='<div class="card-dropdown" id="dropdown-'+oi+'">';
+    html+='<div class="dropdown-item" onclick="event.stopPropagation();toggleFav('+oi+')"><span class="ms '+(a.fav?'ms-fill':'')+'" style="'+(a.fav?'color:#f59e0b;':'')+'">star</span>'+(a.fav?'Unfavorite':'Favorite')+'</div>';
+    html+='<div class="dropdown-item" onclick="event.stopPropagation();openEditModal('+oi+')"><span class="ms">edit</span>Edit</div>';
+    html+='<div class="dropdown-item" onclick="event.stopPropagation();exportQR('+oi+')"><span class="ms">qr_code</span>Export QR</div>';
+    html+='<div class="dropdown-item" onclick="event.stopPropagation();confirmDelete('+oi+')" style="color:var(--error);"><span class="ms" style="color:var(--error);">delete</span>Delete</div>';
+    html+='</div></div></div>';
+    html+='<div class="card-bottom"><div class="card-code"><span>'+c1+'</span><span>'+c2+'</span><span class="ms copy-icon">content_copy</span></div>';
+    html+='<div class="card-ring"><svg width="48" height="48" viewBox="0 0 44 44"><circle class="rbg" cx="22" cy="22" r="18"/><circle class="rfg" cx="22" cy="22" r="18" stroke="'+ringColor+'" stroke-dasharray="'+CIRC.toFixed(1)+'" stroke-dashoffset="'+dashOff+'"/></svg><div class="rnum" style="color:'+numColor+'">'+left+'</div></div>';
+    html+='</div></div>';
+  }
+  html+='</div>';
+  container.innerHTML=html;
+}
+
+function toggleCardMenu(event,oi){
+  event.stopPropagation();
+  document.querySelectorAll('.card').forEach(function(c){
+    c.classList.remove('menu-open');
+  });
+  document.querySelectorAll('.card-dropdown').forEach(function(el){
+    if(el.id!=='dropdown-'+oi){el.classList.remove('show');}
+  });
+  var d=document.getElementById('dropdown-'+oi);
+  if(d){
+    d.classList.toggle('show');
+    if(d.classList.contains('show')){
+      d.closest('.card').classList.add('menu-open');
+    }
+  }
+}
+document.addEventListener('click',function(){
+  document.querySelectorAll('.card-dropdown').forEach(function(el){el.classList.remove('show');});
+  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('menu-open');});
+});
+
+/* ===== COPY ===== */
+function copyCode(oi){
+  if(codes[oi])navigator.clipboard.writeText(codes[oi]).then(function(){showToast('Copied '+accounts[oi].label+' code')});
+  var el=document.getElementById('copied'+oi);
+  if(el){el.classList.add('show');setTimeout(function(){el.classList.remove('show')},1500)}
+}
+
+/* ===== FAVORITE ===== */
+async function toggleFav(oi){
+  var a=accounts[oi];
+  var oldFav=a.fav;
+  a.fav=!oldFav;
+  renderView();
+  await saveLocalCache();
+  if(!isOnline){
+    addToOfflineQueue('favorite',{row:a.row});
+    showToast(a.fav?a.label+' favorited (offline)':a.label+' unfavorited (offline)',false);
+    return;
+  }
+  showToast(a.fav?a.label+' added to favorites':a.label+' removed from favorites');
+  try{
+    var d=await api('favorite',{row:a.row});
+    if(!d.success)throw new Error(d.error);
+    a.fav=d.fav;
+    renderView();
+    await saveLocalCache();
+  }catch(e){
+    if(!isOnline){
+      addToOfflineQueue('favorite',{row:a.row});
+      showToast('Offline Mode. Favorited locally.',true);
+    }else{
+      a.fav=oldFav;
+      renderView();
+      showToast('Failed to save favorite: '+e.message,true);
+    }
+  }
+}
+
+/* ===== ADD ACCOUNT ===== */
+async function doAddAccount(){
+  var label=document.getElementById('addLabel').value.trim();
+  var secret=document.getElementById('addSecret').value.trim().replace(/\s/g,'').toUpperCase();
+  if(!label||!secret){showToast('Fill in both fields',true);return}
+  closeModal('modalAdd');
+  document.getElementById('addLabel').value='';
+  document.getElementById('addSecret').value='';
+  
+  var tempRow=accounts.length>0?Math.max.apply(Math,accounts.map(function(o){return o.row}))+1:3;
+  var newAcc={label:label,secret:secret,fav:false,row:tempRow};
+  accounts.push(newAcc);
+  codes.push('------');
+  renderView();
+  refreshAll();
+  await saveLocalCache();
+
+  if(!isOnline){
+    addToOfflineQueue('add',{label:label,secret:secret});
+    showToast(label+' added locally (offline)');
+    return;
+  }
+  try{
+    var d=await api('add',{label:label,secret:secret});
+    if(d.success){
+      showToast(label+' added successfully');
+      await loadAccounts();
+    }else throw new Error(d.error);
+  }catch(e){
+    if(!isOnline){
+      addToOfflineQueue('add',{label:label,secret:secret});
+      showToast('Offline Mode. Account queued.',true);
+    }else{
+      accounts.pop();
+      codes.pop();
+      renderView();
+      showToast('Failed to add: '+e.message,true);
+    }
+  }
+}
+
+/* ===== EDIT ACCOUNT ===== */
+var editTargetOi=null;
+function openEditModal(oi){
+  editTargetOi=oi;
+  var a=accounts[oi];
+  document.getElementById('editLabel').value=a.label;
+  document.getElementById('editSecret').value=a.secret;
+  document.getElementById('editSecret').type='password';
+  document.getElementById('eyeIcon').textContent='visibility';
+  openModal('modalEdit');
+}
+function toggleViewSecret(){
+  var inp=document.getElementById('editSecret');
+  var eye=document.getElementById('eyeIcon');
+  if(inp.type==='password'){inp.type='text';eye.textContent='visibility_off'}
+  else{inp.type='password';eye.textContent='visibility'}
+}
+async function doEditAccount(){
+  if(editTargetOi===null)return;
+  var label=document.getElementById('editLabel').value.trim();
+  var secret=document.getElementById('editSecret').value.trim().replace(/\s/g,'').toUpperCase();
+  if(!label||!secret){showToast('Fields cannot be empty',true);return}
+  var a=accounts[editTargetOi];
+  var oldLabel=a.label;
+  var oldSecret=a.secret;
+  a.label=label;
+  a.secret=secret;
+  closeModal('modalEdit');
+  renderView();
+  refreshAll();
+  await saveLocalCache();
+  showToast('Account updated');
+  if(!isOnline){
+    addToOfflineQueue('edit',{row:a.row,label:label,secret:secret});
+    showToast('Changes saved locally (offline)');
+    return;
+  }
+  try{
+    var d=await api('edit',{row:a.row,label:label,secret:secret});
+    if(!d.success)throw new Error(d.error);
+    await loadAccounts();
+  }catch(e){
+    if(!isOnline){
+      addToOfflineQueue('edit',{row:a.row,label:label,secret:secret});
+      showToast('Offline Mode. Edit queued.',true);
+    }else{
+      a.label=oldLabel;
+      a.secret=oldSecret;
+      renderView();
+      showToast('Failed to save changes: '+e.message,true);
+    }
+  }
+}
+
+/* ===== EXPORT QR ===== */
+function exportQR(oi){
+  var a=accounts[oi];
+  var dateStr=new Date().toISOString().split('T')[0];
+  qrDownloadFilename='hi-vault_export_'+a.label.replace(/[^a-z0-9_-]/gi,'_')+'_'+dateStr+'.png';
+  document.getElementById('qrSecretText').value=a.secret;
+  document.getElementById('qrDesc').textContent='Scan this code with an authenticator app.';
+  var uri='otpauth://totp/Hi-Vault:'+encodeURIComponent(a.label)+'?secret='+a.secret+'&issuer=Hi-Vault';
+  var qr=new QRious({
+    element:document.getElementById('qrCanvas'),
+    value:uri,
+    size:200,
+    level:'M'
+  });
+  openModal('modalQR');
+}
+
+function downloadQR(){
+  var canvas=document.getElementById('qrCanvas');
+  var link=document.createElement('a');
+  link.href=canvas.toDataURL('image/png');
+  link.download=qrDownloadFilename||'qr-code.png';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('QR Code downloaded successfully');
+}
+
+/* ===== EXPORT EXCEL (CSV) ===== */
+function downloadCSV(){
+  var csv='Label,Secret Key\n';
+  accounts.forEach(function(a){
+    csv+='"'+a.label.replace(/"/g,'""')+'","'+a.secret.replace(/"/g,'""')+'"\n';
+  });
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var link=document.createElement("a");
+  link.href=URL.createObjectURL(blob);
+  link.setAttribute("download","hi-vault-backup.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('CSV downloaded successfully');
+}
+
+/* ===== EXPORT ALL TO GA QR ===== */
+function writeVarint(value) {
+  var bytes = [];
+  while (value > 127) {
+    bytes.push((value & 0x7f) | 0x80);
+    value >>>= 7;
+  }
+  bytes.push(value & 0x7f);
+  return bytes;
+}
+
+function writeLengthDelimited(fieldNum, contentBytes) {
+  var tag = (fieldNum << 3) | 2;
+  var tagBytes = writeVarint(tag);
+  var lenBytes = writeVarint(contentBytes.length);
+  return tagBytes.concat(lenBytes).concat(Array.from(contentBytes));
+}
+
+function writeStringField(fieldNum, str) {
+  var encoder = new TextEncoder();
+  var bytes = encoder.encode(str);
+  return writeLengthDelimited(fieldNum, bytes);
+}
+
+function writeVarintField(fieldNum, value) {
+  var tag = (fieldNum << 3) | 0;
+  var tagBytes = writeVarint(tag);
+  var valBytes = writeVarint(value);
+  return tagBytes.concat(valBytes);
+}
+
+function base64EncodeUrlSafe(bytes) {
+  var binary = '';
+  var len = bytes.byteLength;
+  for (var i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  var base64 = btoa(binary);
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function exportAllToQR(){
+  if(accounts.length === 0){
+    showToast('No accounts to export', true);
+    return;
+  }
+  try {
+    var dateStr=new Date().toISOString().split('T')[0];
+    qrDownloadFilename=username+'_'+dateStr+'.png';
+    var payloadBytes = [];
+    accounts.forEach(function(a) {
+      var secretBytes = b32d(a.secret);
+      var secretField = writeLengthDelimited(1, secretBytes);
+      var nameField = writeStringField(2, a.label);
+      var issuerField = writeStringField(3, "Hi-Vault");
+      var algoField = writeVarintField(4, 1); // SHA1
+      var digitsField = writeVarintField(5, 1); // 6 digits
+      var typeField = writeVarintField(6, 2); // TOTP
+      
+      var otpParamsBytes = secretField.concat(nameField).concat(issuerField).concat(algoField).concat(digitsField).concat(typeField);
+      var otpParametersField = writeLengthDelimited(1, otpParamsBytes);
+      payloadBytes = payloadBytes.concat(otpParametersField);
+    });
+    
+    var base64 = base64EncodeUrlSafe(new Uint8Array(payloadBytes));
+    var migrationUri = 'otpauth-migration://offline?data=' + base64;
+    
+    document.getElementById('qrSecretText').value = 'otpauth-migration://offline';
+    document.getElementById('qrDesc').textContent = 'Scan this QR code in Google Authenticator on your phone to import all ' + accounts.length + ' accounts.';
+    
+    var qr = new QRious({
+      element: document.getElementById('qrCanvas'),
+      value: migrationUri,
+      size: 250,
+      level: 'M'
+    });
+    openModal('modalQR');
+  } catch(e) {
+    showToast('Export failed: ' + e.message, true);
+  }
+}
+
+/* ===== SETTINGS QR SCANNER ===== */
+var settingsQrScanner=null;
+function startSettingsQRScanner(){
+  document.getElementById('settingsQrScannerContainer').style.display='block';
+  settingsQrScanner=new Html5Qrcode("settingsQrReader");
+  settingsQrScanner.start(
+    {facingMode:"environment"},
+    {fps:10,qrbox:250},
+    function(decodedText){
+      decodeMigrationQR(decodedText);
+      stopSettingsQRScanner();
+    },
+    function(error){}
+  ).catch(function(err){showToast('Camera error: '+err,true)});
+}
+function stopSettingsQRScanner(){
+  if(settingsQrScanner){
+    settingsQrScanner.stop().then(function(){
+      document.getElementById('settingsQrScannerContainer').style.display='none';
+      settingsQrScanner=null;
+    }).catch(function(){
+      document.getElementById('settingsQrScannerContainer').style.display='none';
+      settingsQrScanner=null;
+    });
+  }else{
+    document.getElementById('settingsQrScannerContainer').style.display='none';
+  }
+}
+
+function decodeMigrationQR(decodedText) {
+  if (decodedText.startsWith('otpauth-migration://offline?data=')) {
+    var url = new URL(decodedText);
+    var dataParam = url.searchParams.get('data');
+    if (dataParam) {
+      var bytes = decodeUrlSafeBase64(dataParam);
+      var imported = parseProtobuf(bytes);
+      if (imported && imported.length > 0) {
+        doBulkImport(imported);
+      } else {
+        showToast('No accounts found in QR payload', true);
+      }
+    }
+  } else {
+    try {
+      if (decodedText.startsWith('otpauth://')) {
+        var url = new URL(decodedText);
+        var label = decodeURIComponent(url.pathname).replace(/^\/\/totp\//,'').replace(/^\/totp\//,'');
+        if(label.indexOf(':')!==-1)label=label.substring(label.indexOf(':')+1);
+        var secret = url.searchParams.get('secret');
+        var issuer = url.searchParams.get('issuer');
+        if(issuer && label.indexOf(issuer)===-1) label = issuer + ' (' + label + ')';
+        if (label && secret) {
+          doBulkImport([{ label: label, secret: secret.toUpperCase() }]);
+        } else {
+          throw new Error('Missing info');
+        }
+      } else {
+        throw new Error('Invalid URI');
+      }
+    } catch(err) {
+      showToast('Not a valid Authenticator QR code', true);
+    }
+  }
+}
+
+/* ===== BULK IMPORT ===== */
+async function doBulkImport(items) {
+  closeModal('modalAdd');
+  var tempRow=accounts.length>0?Math.max.apply(Math,accounts.map(function(o){return o.row}))+1:3;
+  items.forEach(function(item,idx){
+    accounts.push({label:item.label,secret:item.secret,fav:false,row:tempRow+idx});
+    codes.push('------');
+  });
+  renderView();
+  refreshAll();
+  await saveLocalCache();
+  if(!isOnline){
+    addToOfflineQueue('import',{accounts:JSON.stringify(items)});
+    showToast('Imported '+items.length+' accounts locally (offline)',false);
+    return;
+  }
+  showToast('Importing ' + items.length + ' accounts...');
+  try {
+    var d = await api('import', { accounts: JSON.stringify(items) });
+    if (d.success) {
+      showToast('Successfully imported ' + items.length + ' accounts!');
+      await loadAccounts();
+    } else {
+      throw new Error(d.error);
+    }
+  } catch(err) {
+    if(!isOnline){
+      addToOfflineQueue('import',{accounts:JSON.stringify(items)});
+      showToast('Offline Mode. Import queued.',true);
+    }else{
+      accounts.splice(accounts.length-items.length,items.length);
+      codes.splice(codes.length-items.length,items.length);
+      renderView();
+      showToast('Import failed: ' + err.message, true);
+    }
+  }
+}
+
+function importCSV(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(evt) {
+    var text = evt.target.result;
+    try {
+      var lines = text.split(/\r?\n/);
+      var imported = [];
+      var startIndex = 0;
+      if (lines.length > 0 && (lines[0].toLowerCase().indexOf('secret') !== -1 || lines[0].toLowerCase().indexOf('label') !== -1)) {
+        startIndex = 1;
+      }
+      for (var i = startIndex; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (!line) continue;
+        var parts = line.split(',');
+        if (parts && parts.length >= 2) {
+          var label = parts[0].replace(/^"|"$/g, '').trim();
+          var secret = parts[1].replace(/^"|"$/g, '').trim().replace(/\s/g, '').toUpperCase();
+          if (label && secret) {
+            imported.push({ label: label, secret: secret });
+          }
+        }
+      }
+      if (imported.length === 0) {
+        showToast('No valid accounts found in CSV', true);
+      } else {
+        doBulkImport(imported);
+      }
+    } catch(err) {
+      showToast('Error parsing CSV: ' + err.message, true);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+/* ===== GOOGLE AUTHENTICATOR QR IMPORT ===== */
+function decodeUrlSafeBase64(str) {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (str.length % 4) { str += '='; }
+  var binary = atob(str);
+  var len = binary.length;
+  var bytes = new Uint8Array(len);
+  for (var i = 0; i < len; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+function base32Encode(bytes) {
+  var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  var bits = 0;
+  var value = 0;
+  var output = '';
+  for (var i = 0; i < bytes.length; i++) {
+    value = (value << 8) | bytes[i];
+    bits += 8;
+    while (bits >= 5) {
+      output += alphabet[(value >>> (bits - 5)) & 31];
+      bits -= 5;
+    }
+  }
+  if (bits > 0) {
+    output += alphabet[(value << (5 - bits)) & 31];
+  }
+  return output;
+}
+
+function parseProtobuf(buffer) {
+  var pos = 0;
+  var otps = [];
+  function readVarint() {
+    var value = 0;
+    var shift = 0;
+    while (true) {
+      var b = buffer[pos++];
+      value |= (b & 0x7f) << shift;
+      if (!(b & 0x80)) break;
+      shift += 7;
+    }
+    return value;
+  }
+  function readBytes(len) {
+    var bytes = buffer.subarray(pos, pos + len);
+    pos += len;
+    return bytes;
+  }
+  while (pos < buffer.length) {
+    var tag = readVarint();
+    var wireType = tag & 0x07;
+    var fieldNum = tag >> 3;
+    if (fieldNum === 1 && wireType === 2) {
+      var len = readVarint();
+      var subBuffer = readBytes(len);
+      var otp = parseOtpParams(subBuffer);
+      if (otp.secret) otps.push(otp);
+    } else {
+      if (wireType === 0) readVarint();
+      else if (wireType === 1) pos += 8;
+      else if (wireType === 2) pos += readVarint();
+      else if (wireType === 5) pos += 4;
+    }
+  }
+  return otps;
+}
+
+function parseOtpParams(buffer) {
+  var pos = 0;
+  var otp = { secret: '', label: '' };
+  var name = '', issuer = '';
+  function readVarint() {
+    var value = 0;
+    var shift = 0;
+    while (true) {
+      var b = buffer[pos++];
+      value |= (b & 0x7f) << shift;
+      if (!(b & 0x80)) break;
+      shift += 7;
+    }
+    return value;
+  }
+  function readBytes(len) {
+    var bytes = buffer.subarray(pos, pos + len);
+    pos += len;
+    return bytes;
+  }
+  function readString(len) {
+    var bytes = readBytes(len);
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+  while (pos < buffer.length) {
+    var tag = readVarint();
+    var wireType = tag & 0x07;
+    var fieldNum = tag >> 3;
+    if (fieldNum === 1 && wireType === 2) {
+      var len = readVarint();
+      otp.secret = base32Encode(readBytes(len));
+    } else if (fieldNum === 2 && wireType === 2) {
+      name = readString(readVarint());
+    } else if (fieldNum === 3 && wireType === 2) {
+      issuer = readString(readVarint());
+    } else {
+      if (wireType === 0) readVarint();
+      else if (wireType === 1) pos += 8;
+      else if (wireType === 2) pos += readVarint();
+      else if (wireType === 5) pos += 4;
+    }
+  }
+  if (issuer && name.indexOf(issuer) === -1) {
+    otp.label = issuer + ' (' + name + ')';
+  } else {
+    otp.label = name || 'Imported Account';
+  }
+  return otp;
+}
+
+function importGoogleAuthQR(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var html5QrCode = new Html5Qrcode("qrReader");
+  showToast('Reading Migration QR...');
+  html5QrCode.scanFile(file, true)
+    .then(decodedText => {
+      decodeMigrationQR(decodedText);
+    })
+    .catch(err => {
+      showToast('Failed to parse QR: ' + err, true);
+    });
+  e.target.value = '';
+}
+
+/* ===== QR SCANNER ===== */
+var html5QrcodeScanner=null;
+function startQRScanner(){
+  document.getElementById('qrScannerContainer').style.display='block';
+  html5QrcodeScanner=new Html5Qrcode("qrReader");
+  html5QrcodeScanner.start(
+    {facingMode:"environment"},
+    {fps:10,qrbox:250},
+    function(decodedText){
+      parseTOTPUri(decodedText);
+      stopQRScanner();
+    },
+    function(error){}
+  ).catch(function(err){showToast('Camera error: '+err,true)});
+}
+function stopQRScanner(){
+  if(html5QrcodeScanner){
+    html5QrcodeScanner.stop().then(function(){
+      document.getElementById('qrScannerContainer').style.display='none';
+      html5QrcodeScanner=null;
+    }).catch(function(){
+      document.getElementById('qrScannerContainer').style.display='none';
+      html5QrcodeScanner=null;
+    });
+  }else{
+    document.getElementById('qrScannerContainer').style.display='none';
+  }
+}
+function uploadQR(e){
+  var file=e.target.files[0];
+  if(!file)return;
+  var scanner=new Html5Qrcode("qrReader");
+  showToast('Reading QR Code...');
+  scanner.scanFile(file,true).then(function(decodedText){
+    parseTOTPUri(decodedText);
+    showToast('QR Code parsed');
+  }).catch(function(err){showToast('Failed to read QR: '+err,true)});
+  e.target.value='';
+}
+function parseTOTPUri(uri){
+  try{
+    if(!uri.startsWith('otpauth://')){
+      var clean=uri.trim().replace(/\s/g,'').toUpperCase();
+      if(/^[A-Z2-7]+=*$/.test(clean)){
+        document.getElementById('addSecret').value=clean;
+        showToast('Secret key found!');
+        return;
+      }
+      throw new Error('Invalid code content');
+    }
+    var url=new URL(uri);
+    var label=decodeURIComponent(url.pathname).replace(/^\/\/totp\//,'').replace(/^\/totp\//,'');
+    if(label.indexOf(':')!==-1)label=label.substring(label.indexOf(':')+1);
+    var secret=url.searchParams.get('secret');
+    var issuer=url.searchParams.get('issuer');
+    if(issuer&&label.indexOf(issuer)===-1)label=issuer+' ('+label+')';
+    if(label)document.getElementById('addLabel').value=label;
+    if(secret)document.getElementById('addSecret').value=secret.toUpperCase();
+  }catch(err){showToast('QR error: '+err.message,true)}
+}
+
+/* ===== DELETE ACCOUNT ===== */
+function confirmDelete(oi){
+  deleteTarget=oi;
+  document.getElementById('deleteLabel').textContent=accounts[oi].label;
+  openModal('modalDelete');
+}
+async function doDeleteAccount(){
+  if(deleteTarget===null)return;
+  var a=accounts[deleteTarget];
+  var removedItem=accounts.splice(deleteTarget,1)[0];
+  var removedCode=codes.splice(deleteTarget,1)[0];
+  closeModal('modalDelete');
+  renderView();
+  showToast(a.label+' deleted');
+  await saveLocalCache();
+  var oldTarget=deleteTarget;
+  deleteTarget=null;
+  if(!isOnline){
+    addToOfflineQueue('delete',{row:a.row});
+    showToast(a.label+' deleted locally (offline)',false);
+    return;
+  }
+  try{
+    var d=await api('delete',{row:a.row});
+    if(!d.success)throw new Error(d.error);
+    await loadAccounts();
+  }catch(e){
+    if(!isOnline){
+      addToOfflineQueue('delete',{row:a.row});
+      showToast('Offline Mode. Deletion queued.',true);
+    }else{
+      accounts.splice(oldTarget,0,removedItem);
+      codes.splice(oldTarget,0,removedCode);
+      renderView();
+      showToast('Delete failed: '+e.message,true);
+    }
+  }
+}
+
+/* ===== DRAG & DROP REORDER ===== */
+function dStart(e){
+  var card=e.target.closest('.card');
+  dragSrcIndex=parseInt(card.dataset.oi);
+  card.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',dragSrcIndex);
+}
+function dOver(e){e.preventDefault();e.dataTransfer.dropEffect='move'}
+function dEnter(e){e.preventDefault();var card=e.target.closest('.card');if(card)card.classList.add('drag-over')}
+function dLeave(e){var card=e.target.closest('.card');if(card)card.classList.remove('drag-over')}
+function dDrop(e){
+  e.preventDefault();
+  var card=e.target.closest('.card');
+  if(!card)return;
+  card.classList.remove('drag-over');
+  var targetIndex=parseInt(card.dataset.oi);
+  if(dragSrcIndex===targetIndex||dragSrcIndex===null)return;
+  doReorder(dragSrcIndex,targetIndex);
+}
+function dEnd(e){
+  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('dragging','drag-over')});
+  dragSrcIndex=null;
+}
+
+/* Touch drag support for mobile */
+var touchDragEl=null,touchDragOi=null,touchClone=null,touchStartX=0,touchStartY=0,touchOffsetX=0,touchOffsetY=0;
+document.addEventListener('touchstart',function(e){
+  var handle=e.target.closest('.drag-handle');
+  if(!handle)return;
+  var card=handle.closest('.card');
+  if(!card)return;
+  e.preventDefault();
+  touchDragEl=card;
+  touchDragOi=parseInt(card.dataset.oi);
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+  // Create visual clone
+  touchClone=card.cloneNode(true);
+  touchClone.style.position='fixed';
+  touchClone.style.width=card.offsetWidth+'px';
+  touchClone.style.opacity='0.8';
+  touchClone.style.zIndex='999';
+  touchClone.style.pointerEvents='none';
+  touchClone.style.transform='rotate(2deg)';
+  var rect=card.getBoundingClientRect();
+  touchOffsetX=touchStartX-rect.left;
+  touchOffsetY=touchStartY-rect.top;
+  touchClone.style.left=rect.left+'px';
+  touchClone.style.top=rect.top+'px';
+  document.body.appendChild(touchClone);
+  card.classList.add('dragging');
+},{passive:false});
+
+document.addEventListener('touchmove',function(e){
+  if(!touchClone)return;
+  e.preventDefault();
+  var touch=e.touches[0];
+  touchClone.style.left=(touch.clientX-touchOffsetX)+'px';
+  touchClone.style.top=(touch.clientY-touchOffsetY)+'px';
+  // Highlight target
+  var el=document.elementFromPoint(touch.clientX,touch.clientY);
+  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('drag-over')});
+  if(el){var tc=el.closest('.card');if(tc&&tc!==touchDragEl)tc.classList.add('drag-over')}
+},{passive:false});
+
+document.addEventListener('touchend',function(e){
+  if(!touchClone)return;
+  var touch=e.changedTouches[0];
+  var el=document.elementFromPoint(touch.clientX,touch.clientY);
+  if(el){var tc=el.closest('.card');if(tc&&tc!==touchDragEl){var targetOi=parseInt(tc.dataset.oi);if(touchDragOi!==null&&targetOi!==touchDragOi)doReorder(touchDragOi,targetOi)}}
+  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('dragging','drag-over')});
+  if(touchClone&&touchClone.parentNode)touchClone.parentNode.removeChild(touchClone);
+  touchClone=null;touchDragEl=null;touchDragOi=null;
+});
+
+async function doReorder(fromOi,toOi){
+  var fromIdx=accounts.findIndex(function(a,i){return i===fromOi});
+  var toIdx=accounts.findIndex(function(a,i){return i===toOi});
+  if(fromIdx===-1||toIdx===-1)return;
+  
+  var item=accounts.splice(fromIdx,1)[0];
+  accounts.splice(toIdx,0,item);
+  var code=codes.splice(fromIdx,1)[0];
+  codes.splice(toIdx,0,code);
+  renderView();
+  showToast('Order updated');
+  await saveLocalCache();
+  
+  var rows=accounts.map(function(a){return a.row});
+  if(!isOnline){
+    addToOfflineQueue('reorder',{rows:JSON.stringify(rows)});
+    showToast('Order saved locally (offline)',false);
+    return;
+  }
+  try{
+    var d=await api('reorder',{rows:JSON.stringify(rows)});
+    if(!d.success)throw new Error(d.error);
+    await loadAccounts();
+  }catch(e){
+    if(!isOnline){
+      addToOfflineQueue('reorder',{rows:JSON.stringify(rows)});
+      showToast('Offline Mode. Reorder queued.',true);
+    }else{
+      showToast('Sync failed: '+e.message,true);
+    }
+  }
+}
+
+/* ===== MODALS ===== */
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+  if(id==='modalAdd') stopQRScanner();
+}
+
+/* ===== SETTINGS ===== */
+function saveSettingsApi(){
+  var u=document.getElementById('settingsApiUrl').value.trim();
+  if(u){
+    setApiUrl(u);
+    clearSavedCreds();
+    username='';
+    password='';
+    showToast('URL updated. Logging out...');
+    setTimeout(function(){
+      document.getElementById('screenApp').style.display='none';
+      document.getElementById('screenLogin').style.display='flex';
+      document.getElementById('userInput').value='';
+      document.getElementById('pwInput').value='';
+      document.getElementById('pwError').classList.remove('show');
+      document.getElementById('apiUrlInputLogin').value=u;
+      switchView('accounts');
+    }, 1500);
+  }
+}
+
+/* ===== TOAST ===== */
+function showToast(msg,isError){
+  var t=document.getElementById('toast');
+  document.getElementById('toastText').textContent=msg;
+  document.getElementById('toastIcon').textContent=isError?'error':'check_circle';
+  t.className='toast'+(isError?' error':'')+' show';
+  clearTimeout(t._tid);
+  t._tid=setTimeout(function(){t.classList.remove('show')},2200);
+}
+
+/* ===== LIVE 2FA ===== */
+var liveDecodedLabel='';
+
+async function updateLiveTOTP() {
+  var input = document.getElementById('liveSecretInput');
+  if (!input) return;
+  var val = input.value.trim();
+  var codeEl = document.getElementById('liveCode');
+  var maskEl = document.getElementById('liveSecretMasked');
+  var card = document.getElementById('livePreviewCard');
+  var btnSave = document.getElementById('btnLiveSaveCard');
+  if (!val) {
+    codeEl.innerHTML = '<span>---</span><span>---</span><span class="ms copy-icon">content_copy</span>';
+    maskEl.textContent = 'No key entered';
+    card.style.borderTopColor = '';
+    if(btnSave)btnSave.style.display='none';
+    liveDecodedLabel='';
+    return;
+  }
+  var secret = val.replace(/\s/g, '').toUpperCase();
+  try {
+    var bytes = b32d(secret);
+    if (bytes.length === 0) throw new Error();
+    var c = await totp(secret);
+    codeEl.innerHTML = '<span>' + c.substring(0,3) + '</span><span>' + c.substring(3) + '</span><span class="ms copy-icon">content_copy</span>';
+    maskEl.textContent = secret.substring(0,4) + '****';
+    card.style.borderTopColor = '';
+    if(btnSave)btnSave.style.display=isLoggedIn?'inline-block':'none';
+  } catch(e) {
+    codeEl.innerHTML = '<span>INV</span><span>ALD</span><span class="ms copy-icon">content_copy</span>';
+    maskEl.textContent = 'Invalid Base32 secret';
+    card.style.borderTopColor = 'var(--error)';
+    if(btnSave)btnSave.style.display='none';
+  }
+}
+
+async function copyLiveCode() {
+  var input = document.getElementById('liveSecretInput');
+  if (!input || !input.value.trim()) return;
+  var secret = input.value.trim().replace(/\s/g, '').toUpperCase();
+  try {
+    var bytes = b32d(secret);
+    if (bytes.length === 0) throw new Error();
+    var c = await totp(secret);
+    navigator.clipboard.writeText(c).then(function() {
+      showToast('Live code copied!');
+    });
+    var el = document.getElementById('copiedLive');
+    if (el) {
+      el.classList.add('show');
+      setTimeout(function() { el.classList.remove('show') }, 1500);
+    }
+  } catch(e) {
+    showToast('Invalid key, cannot copy', true);
+  }
+}
+
+function saveLiveToMyAccounts(){
+  var input=document.getElementById('liveSecretInput');
+  if(!input||!input.value.trim())return;
+  var secret=input.value.trim().replace(/\s/g,'').toUpperCase();
+  document.getElementById('addLabel').value=liveDecodedLabel||'Live Decoded';
+  document.getElementById('addSecret').value=secret;
+  switchView('accounts');
+  openModal('modalAdd');
+}
+
+var liveQrScanner=null;
+function startLiveQRScanner(){
+  document.getElementById('liveQrScannerContainer').style.display='block';
+  liveQrScanner=new Html5Qrcode("liveQrReader");
+  liveQrScanner.start(
+    {facingMode:"environment"},
+    {fps:10,qrbox:250},
+    function(decodedText){
+      parseLiveQR(decodedText);
+      stopLiveQRScanner();
+    },
+    function(error){}
+  ).catch(function(err){showToast('Camera error: '+err,true)});
+}
+function stopLiveQRScanner(){
+  if(liveQrScanner){
+    liveQrScanner.stop().then(function(){
+      document.getElementById('liveQrScannerContainer').style.display='none';
+      liveQrScanner=null;
+    }).catch(function(){
+      document.getElementById('liveQrScannerContainer').style.display='none';
+      liveQrScanner=null;
+    });
+  }else{
+    document.getElementById('liveQrScannerContainer').style.display='none';
+  }
+}
+function uploadLiveQR(e){
+  var file=e.target.files[0];
+  if(!file)return;
+  var scanner=new Html5Qrcode("liveQrReader");
+  showToast('Reading QR Code...');
+  scanner.scanFile(file,true).then(function(decodedText){
+    parseLiveQR(decodedText);
+    showToast('QR Code parsed');
+  }).catch(function(err){showToast('Failed to read QR: '+err,true)});
+  e.target.value='';
+}
+function parseLiveQR(uri){
+  try{
+    if(!uri.startsWith('otpauth://')){
+      var clean=uri.trim().replace(/\s/g,'').toUpperCase();
+      if(/^[A-Z2-7]+=*$/.test(clean)){
+        document.getElementById('liveSecretInput').value=clean;
+        liveDecodedLabel='';
+        updateLiveTOTP();
+        showToast('Secret key loaded!');
+        return;
+      }
+      throw new Error('Invalid code content');
+    }
+    var url=new URL(uri);
+    var secret=url.searchParams.get('secret');
+    var label=decodeURIComponent(url.pathname).replace(/^\/\/totp\//,'').replace(/^\/totp\//,'');
+    if(label.indexOf(':')!==-1)label=label.substring(label.indexOf(':')+1);
+    var issuer=url.searchParams.get('issuer');
+    if(secret){
+      document.getElementById('liveSecretInput').value=secret.toUpperCase();
+      liveDecodedLabel=issuer?issuer+' ('+label+')':label;
+      updateLiveTOTP();
+      showToast('Account details loaded!');
+    }
+  }catch(err){showToast('QR error: '+err.message,true)}
+}
+
+/* ===== REFRESH & TICK ===== */
+async function refreshAll(){
+  for(var i=0;i<accounts.length;i++){try{codes[i]=await totp(accounts[i].secret)}catch(e){codes[i]='ERROR'}}
+  renderView();
+  var ts=new Date().toLocaleTimeString();
+  document.getElementById('timerLabel').textContent='Updated '+ts;
+  var lf=document.getElementById('timerLabelFav');if(lf)lf.textContent='Updated '+ts;
+}
+
+var lastLeft=-1;
+function tick(){
+  var now=Math.floor(Date.now()/1000),left=30-(now%30),prog=left/30;
+  var off=(CIRC*(1-prog)).toFixed(1);
+  var urg=left<=5;
+
+  // Global rings
+  ['timerNum','timerNumFav'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=left});
+  ['timerArc','timerArcFav'].forEach(function(id){var e=document.getElementById(id);if(e)e.setAttribute('stroke-dashoffset',off)});
+  ['timerRing','timerRingFav'].forEach(function(id){var e=document.getElementById(id);if(e){if(urg)e.classList.add('urgent');else e.classList.remove('urgent')}});
+
+  // Card rings
+  document.querySelectorAll('.card-ring').forEach(function(cr){
+    var fg=cr.querySelector('.rfg'),nm=cr.querySelector('.rnum');
+    if(fg){fg.setAttribute('stroke-dashoffset',off);fg.setAttribute('stroke',urg?'var(--error)':'var(--primary)')}
+    if(nm){nm.textContent=left;nm.style.color=urg?'var(--error)':'var(--on-surface)'}
+  });
+
+  // Live Ring
+  var liveArc = document.getElementById('liveArc');
+  var liveNum = document.getElementById('liveNum');
+  var liveRing = document.getElementById('liveRing');
+  if (liveArc) {
+    liveArc.setAttribute('stroke-dashoffset', off);
+    liveArc.setAttribute('stroke', urg ? 'var(--error)' : 'var(--primary)');
+  }
+  if (liveNum) {
+    liveNum.textContent = left;
+    liveNum.style.color = urg ? 'var(--error)' : 'var(--on-surface)';
+  }
+  if (liveRing) {
+    if (urg) liveRing.classList.add('urgent');
+    else liveRing.classList.remove('urgent');
+  }
+
+  if (currentView === 'live') updateLiveTOTP();
+
+  if(left===30&&lastLeft!==30)refreshAll();
+  lastLeft=left;
+}
+</script>
+</body>
+</html>
