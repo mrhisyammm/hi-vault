@@ -82,6 +82,22 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // Network-First for navigation (index.html) and API requests
+  if (e.request.mode === 'navigate' || e.request.url.includes('index.html') || e.request.url.includes('api')) {
+    e.respondWith(
+      fetch(e.request).then(response => {
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(e.request, response.clone());
+          return response;
+        });
+      }).catch(() => {
+        return caches.match(e.request);
+      })
+    );
+    return;
+  }
+  
+  // Cache-First for static assets
   e.respondWith(
     caches.match(e.request).then(cachedResponse => {
       if (cachedResponse) {

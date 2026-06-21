@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hi-Vault">
 <!-- Hi-Vault Favicon -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230052cc'/%3E%3Cstop offset='100%25' stop-color='%23003d9b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z' fill='%23fff'/%3E%3Ccircle cx='44' cy='18' r='6' fill='%2300c853'/%3E%3Cpath d='M41.5 18l1.5 1.5 3-3' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230A63FF'/%3E%3Cstop offset='100%25' stop-color='%23003D9B'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 10 L48 16 V28 C48 40 40 48 32 54 C24 48 16 40 16 28 V16 Z' fill='white' opacity='0.95'/%3E%3Cpath d='M24 22h4v16h-4z M36 22h4v16h-4z M28 28h8v4h-8z' fill='%23003D9B'/%3E%3Ccircle cx='48' cy='16' r='7' fill='%2300D26A'/%3E%3Cpath d='M45.5 16l1.8 1.8 3.5-3.5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/>
@@ -247,6 +247,7 @@ input{font-family:inherit}
 .page-title{font-size:22px;line-height:30px}
 .page-subtitle{font-size:14px}
 .page-actions{display:flex;gap:8px;width:100%}
+.page-actions .btn-primary-sm{display:none}
 .search-box{flex:1;min-width:0}
 .search-box input{width:100%!important;min-width:0!important}
 .btn-sort, .btn-primary-sm{flex-shrink:0}
@@ -286,11 +287,17 @@ input{font-family:inherit}
 <div id="splashScreen" style="position:fixed;inset:0;background:var(--background);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.4s ease-out;">
   <div class="login-logo" style="margin:0 auto 0;">
     <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="lgs" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0052cc"/><stop offset="100%" stop-color="#003d9b"/></linearGradient></defs>
-      <rect width="64" height="64" rx="14" fill="url(#lgs)"/>
-      <path d="M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z" fill="#fff"/>
-      <circle cx="44" cy="18" r="6" fill="#00c853"/>
-      <path d="M41.5 18l1.5 1.5 3-3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0A63FF"/>
+          <stop offset="100%" stop-color="#003D9B"/>
+        </linearGradient>
+      </defs>
+      <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+      <path d="M32 10 L48 16 V28 C48 40 40 48 32 54 C24 48 16 40 16 28 V16 Z" fill="white" opacity="0.95"/>
+      <path d="M24 22h4v16h-4z M36 22h4v16h-4z M28 28h8v4h-8z" fill="#003D9B"/>
+      <circle cx="48" cy="16" r="7" fill="#00D26A"/>
+      <path d="M45.5 16l1.8 1.8 3.5-3.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
   <h2 style="font-family:Manrope;font-size:24px;font-weight:700;color:var(--primary);margin-top:20px;">Hi-Vault</h2>
@@ -382,11 +389,17 @@ input{font-family:inherit}
 <div class="login-card">
 <div class="login-logo">
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0052cc"/><stop offset="100%" stop-color="#003d9b"/></linearGradient></defs>
-<rect width="64" height="64" rx="14" fill="url(#lg)"/>
-<path d="M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z" fill="#fff"/>
-<circle cx="44" cy="18" r="6" fill="#00c853"/>
-<path d="M41.5 18l1.5 1.5 3-3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="bg_login" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A63FF"/>
+      <stop offset="100%" stop-color="#003D9B"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg_login)"/>
+  <path d="M32 10 L48 16 V28 C48 40 40 48 32 54 C24 48 16 40 16 28 V16 Z" fill="white" opacity="0.95"/>
+  <path d="M24 22h4v16h-4z M36 22h4v16h-4z M28 28h8v4h-8z" fill="#003D9B"/>
+  <circle cx="44" cy="16" r="7" fill="#00D26A"/>
+  <path d="M41.5 16l1.8 1.8 3.5-3.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 </div>
 <div class="login-title">Hi-Vault</div>
@@ -427,11 +440,17 @@ input{font-family:inherit}
 <div class="sidebar-header">
 <div class="sidebar-logo">
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0052cc"/><stop offset="100%" stop-color="#003d9b"/></linearGradient></defs>
-<rect width="64" height="64" rx="14" fill="url(#lg2)"/>
-<path d="M20 22h6v20h-6zM26 30h12v6H26zM38 22h6v20h-6z" fill="#fff"/>
-<circle cx="44" cy="18" r="6" fill="#00c853"/>
-<path d="M41.5 18l1.5 1.5 3-3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="bg_sidebar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A63FF"/>
+      <stop offset="100%" stop-color="#003D9B"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg_sidebar)"/>
+  <path d="M32 10 L48 16 V28 C48 40 40 48 32 54 C24 48 16 40 16 28 V16 Z" fill="white" opacity="0.95"/>
+  <path d="M24 22h4v16h-4z M36 22h4v16h-4z M28 28h8v4h-8z" fill="#003D9B"/>
+  <circle cx="44" cy="16" r="7" fill="#00D26A"/>
+  <path d="M41.5 16l1.8 1.8 3.5-3.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 </div>
 <div class="sidebar-brand">
@@ -477,6 +496,7 @@ input{font-family:inherit}
     <span class="text">Connected</span>
   </div>
 </div>
+<button class="topbar-btn private-nav" id="btnTopbarAdd" onclick="openModal('modalAdd')" style="color:var(--primary); border:none;"><span class="ms">add</span></button>
 </div>
 <div class="main-bg"></div>
 <div class="main-inner">
