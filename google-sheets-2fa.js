@@ -260,7 +260,10 @@ function _handleRequest(params) {
 
   // Login check
   if (action === "login") {
-    return { success: user.toLowerCase() === WEB_APP_USERNAME.toLowerCase() && pw === WEB_APP_PASSWORD };
+    if (user.toLowerCase() === WEB_APP_USERNAME.toLowerCase() && pw === WEB_APP_PASSWORD) {
+      return { success: true, username: WEB_APP_USERNAME };
+    }
+    return { success: false };
   }
 
   // Auth gate for everything else

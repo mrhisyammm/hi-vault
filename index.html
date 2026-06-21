@@ -1288,6 +1288,7 @@ async function doAutoLogin(){
   try{
     var d=await api('login');
     if(d.success){
+      username=d.username||username;
       isLoggedIn=true;
       document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
       document.getElementById('sidebarUserSection').style.display='flex';
@@ -1316,12 +1317,13 @@ async function submitPw(){
   try{
     var d=await api('login');
     if(d.success){
+      username=d.username||user;
       isLoggedIn=true;
       document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
       document.getElementById('sidebarUserSection').style.display='flex';
       document.getElementById('btnSidebarLogout').style.display='flex';
       document.getElementById('btnSidebarLogin').style.display='none';
-      setSavedUser(user);
+      setSavedUser(username);
       setSavedPw(pw);err.classList.remove('show');
       document.getElementById('screenLogin').style.display='none';
       document.getElementById('screenApp').style.display='flex';
