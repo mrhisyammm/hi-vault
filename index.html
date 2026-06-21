@@ -1301,7 +1301,18 @@ async function doAutoLogin(){
       document.getElementById('screenApp').style.display='flex';
       loadAccounts();
     }else{clearSavedCreds();username='';password=''}
-  }catch(e){clearSavedCreds();username='';password=''}
+  }catch(e){
+    // Network/Connection failure (Offline Mode)
+    // Do NOT clear credentials, instead bypass and let loadAccounts load from local cache
+    isLoggedIn=true;
+    document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
+    document.getElementById('sidebarUserSection').style.display='flex';
+    document.getElementById('btnSidebarLogout').style.display='flex';
+    document.getElementById('btnSidebarLogin').style.display='none';
+    document.getElementById('screenLogin').style.display='none';
+    document.getElementById('screenApp').style.display='flex';
+    loadAccounts();
+  }
   hideSplash();
 }
 
