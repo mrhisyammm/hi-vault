@@ -110,7 +110,7 @@ input{font-family:inherit}
 .card-info{min-width:0;flex:1}
 .card-label{font-family:Manrope;font-size:17px;font-weight:600;color:var(--on-surface);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--on-surface-variant);margin-top:2px}
-.card-menu-container{position:relative;flex-shrink:0}
+.card-menu-container{position:relative;flex-shrink:0;display:flex;align-items:center;gap:2px}
 .card-dropdown{display:none;position:absolute;right:0;top:36px;background:var(--surface-container-lowest);border:1px solid var(--outline-variant);border-radius:10px;box-shadow:0 8px 24px rgba(9,30,66,0.15);z-index:100;min-width:140px;padding:6px 0}
 .card-dropdown.show{display:block}
 .dropdown-item{display:flex;align-items:center;gap:10px;width:100%;padding:8px 16px;font-size:13px;font-weight:500;color:var(--on-surface);text-align:left;transition:background 0.1s;cursor:pointer}
@@ -251,7 +251,6 @@ input{font-family:inherit}
 .search-box{flex:1;min-width:0}
 .search-box input{width:100%!important;min-width:0!important}
 .btn-sort, .btn-primary-sm{flex-shrink:0}
-.drag-handle{display:none}
 .card{padding:12px 16px}
 .card-top{margin-bottom:8px}
 .card-icon{width:36px;height:36px}
@@ -508,14 +507,10 @@ input{font-family:inherit}
 <div><h2 class="page-title">All Accounts</h2><p class="page-subtitle">Access your two-factor authentication tokens securely.</p></div>
 <div class="page-actions">
 <div class="search-box"><span class="ms">search</span><input type="text" id="searchInput" placeholder="Search accounts..." oninput="renderView()"></div>
-<button class="btn-sort" id="btnSortAZ" onclick="toggleSort('az')" title="Sort A-Z"><span class="ms">sort_by_alpha</span><span class="sort-label">A-Z</span></button>
+<button class="btn-sort" id="btnSortAZ" onclick="toggleSort()" title="Sort A-Z"><span class="ms">sort_by_alpha</span><span class="sort-label">A-Z</span></button>
 <button class="btn-primary-sm" onclick="openModal('modalAdd')"><span class="ms">add</span> Add</button>
 </div>
 </header>
-<div class="timer-bar">
-<div class="timer-ring-g" id="timerRing"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="rbg" cx="22" cy="22" r="18"/><circle class="rfg" id="timerArc" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="0"/></svg><div class="rnum" id="timerNum">30</div></div>
-<div class="timer-info"><span id="timerLabel">Loading...</span></div>
-</div>
 <div id="cardsContainer"><div class="loading"><div class="spinner"></div>Loading accounts...</div></div>
 </div>
 
@@ -525,12 +520,9 @@ input{font-family:inherit}
 <div><h2 class="page-title">Favorites</h2><p class="page-subtitle">Your starred accounts for quick access.</p></div>
 <div class="page-actions">
 <div class="search-box"><span class="ms">search</span><input type="text" id="searchFav" placeholder="Search favorites..." oninput="renderView()"></div>
+<button class="btn-sort" id="btnSortFav" onclick="toggleSortFav()" title="Sort A-Z"><span class="ms">sort_by_alpha</span><span class="sort-label">A-Z</span></button>
 </div>
 </header>
-<div class="timer-bar">
-<div class="timer-ring-g" id="timerRingFav"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="rbg" cx="22" cy="22" r="18"/><circle class="rfg" id="timerArcFav" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="0"/></svg><div class="rnum" id="timerNumFav">30</div></div>
-<div class="timer-info"><span id="timerLabelFav">Loading...</span></div>
-</div>
 <div id="cardsFavContainer"></div>
 </div>
 
@@ -1068,6 +1060,7 @@ function copyGasCode() {
 /* ===== STATE ===== */
 var accounts=[], codes=[], username='', password='', currentView='accounts';
 var sortMode='none'; // none | az | za
+var sortModeFav='none';
 var deleteTarget=null;
 var CIRC=2*Math.PI*18;
 var tickInterval=null;
@@ -1558,19 +1551,26 @@ async function loadAccounts(){
 }
 
 /* ===== SORT ===== */
-function toggleSort(mode){
+function toggleSort(){
   var btn=document.getElementById('btnSortAZ');
   if(sortMode==='none'){sortMode='az';btn.classList.add('active');btn.querySelector('.sort-label').textContent='A-Z'}
   else if(sortMode==='az'){sortMode='za';btn.querySelector('.sort-label').textContent='Z-A'}
   else{sortMode='none';btn.classList.remove('active');btn.querySelector('.sort-label').textContent='A-Z'}
   renderView();
 }
+function toggleSortFav(){
+  var btn=document.getElementById('btnSortFav');
+  if(sortModeFav==='none'){sortModeFav='az';btn.classList.add('active');btn.querySelector('.sort-label').textContent='A-Z'}
+  else if(sortModeFav==='az'){sortModeFav='za';btn.querySelector('.sort-label').textContent='Z-A'}
+  else{sortModeFav='none';btn.classList.remove('active');btn.querySelector('.sort-label').textContent='A-Z'}
+  renderView();
+}
 
-function getSortedAccounts(list){
+function getSortedAccounts(list,mode){
   var items=list.map(function(a,i){return{a:a,c:codes[accounts.indexOf(a)]||'------',oi:accounts.indexOf(a)};});
-  if(sortMode==='az')items.sort(function(a,b){return a.a.label.localeCompare(b.a.label)});
-  else if(sortMode==='za')items.sort(function(a,b){return b.a.label.localeCompare(a.a.label)});
-  else if(sortMode==='none'){
+  if(mode==='az')items.sort(function(a,b){return a.a.label.localeCompare(b.a.label)});
+  else if(mode==='za')items.sort(function(a,b){return b.a.label.localeCompare(a.a.label)});
+  else{
     items.sort(function(a,b){
       if(a.a.fav && !b.a.fav) return -1;
       if(!a.a.fav && b.a.fav) return 1;
@@ -1584,14 +1584,14 @@ function getSortedAccounts(list){
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
 function renderView(){
-  if(currentView==='accounts')renderCards('cardsContainer',accounts,document.getElementById('searchInput').value,true);
+  if(currentView==='accounts')renderCards('cardsContainer',accounts,document.getElementById('searchInput').value,true,sortMode);
   else if(currentView==='favorites'){
     var favs=accounts.filter(function(a){return a.fav});
-    renderCards('cardsFavContainer',favs,document.getElementById('searchFav').value,false);
+    renderCards('cardsFavContainer',favs,document.getElementById('searchFav').value,false,sortModeFav);
   }
 }
 
-function renderCards(containerId,list,query,allowDrag){
+function renderCards(containerId,list,query,allowDrag,mode){
   var container=document.getElementById(containerId);
   query=(query||'').toLowerCase();
   if(!list.length){
@@ -1601,14 +1601,14 @@ function renderCards(containerId,list,query,allowDrag){
     return;
   }
   var filtered=list.filter(function(a){return !query||a.label.toLowerCase().indexOf(query)!==-1});
-  var items=getSortedAccounts(filtered);
+  var items=getSortedAccounts(filtered,mode);
   if(!items.length){container.innerHTML='<div class="empty-state"><span class="ms">search_off</span><p>No matching accounts found.</p></div>';return}
 
   var now=Math.floor(Date.now()/1000),left=30-(now%30),prog=left/30;
   var dashOff=(CIRC*(1-prog)).toFixed(1);
   var ringColor=left<=5?'var(--error)':'var(--primary)';
   var numColor=left<=5?'var(--error)':'var(--on-surface)';
-  var canDrag=allowDrag&&sortMode==='none'&&!query;
+  var canDrag=allowDrag&&mode==='none'&&!query;
 
   var html='<div class="cards-grid">';
   for(var x=0;x<items.length;x++){
@@ -1619,10 +1619,11 @@ function renderCards(containerId,list,query,allowDrag){
     html+='<div class="card-accent"></div>';
     html+='<div class="card-copied" id="copied'+oi+'">Copied!</div>';
     html+='<div class="card-top"><div class="card-identity">';
-    if(canDrag)html+='<div class="drag-handle card-btn" onclick="event.stopPropagation()"><span class="ms">drag_indicator</span></div>';
     html+='<div class="card-icon"><span class="ms" style="color:'+ico.c+'">'+ico.i+'</span></div>';
     html+='<div class="card-info"><div class="card-label">'+esc(a.label)+'</div><div class="card-sub">'+esc(a.secret.substring(0,4)+'****')+'</div></div></div>';
-    html+='<div class="card-menu-container"><button class="card-btn" onclick="event.stopPropagation();toggleCardMenu(event,'+oi+')" title="Menu"><span class="ms">more_vert</span></button>';
+    html+='<div class="card-menu-container">';
+    if(canDrag)html+='<div class="drag-handle card-btn" onclick="event.stopPropagation()"><span class="ms">drag_indicator</span></div>';
+    html+='<button class="card-btn" onclick="event.stopPropagation();toggleCardMenu(event,'+oi+')" title="Menu"><span class="ms">more_vert</span></button>';
     html+='<div class="card-dropdown" id="dropdown-'+oi+'">';
     html+='<div class="dropdown-item" onclick="event.stopPropagation();toggleFav('+oi+')"><span class="ms '+(a.fav?'ms-fill':'')+'" style="'+(a.fav?'color:#f59e0b;':'')+'">star</span>'+(a.fav?'Unfavorite':'Favorite')+'</div>';
     html+='<div class="dropdown-item" onclick="event.stopPropagation();openEditModal('+oi+')"><span class="ms">edit</span>Edit</div>';
@@ -2551,7 +2552,7 @@ async function refreshAll(){
   for(var i=0;i<accounts.length;i++){try{codes[i]=await totp(accounts[i].secret)}catch(e){codes[i]='ERROR'}}
   renderView();
   var ts=new Date().toLocaleTimeString();
-  document.getElementById('timerLabel').textContent='Updated '+ts;
+  var tl=document.getElementById('timerLabel');if(tl)tl.textContent='Updated '+ts;
   var lf=document.getElementById('timerLabelFav');if(lf)lf.textContent='Updated '+ts;
 }
 
