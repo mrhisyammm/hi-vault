@@ -260,11 +260,11 @@ function _handleRequest(params) {
 
   // Login check
   if (action === "login") {
-    return { success: user === WEB_APP_USERNAME && pw === WEB_APP_PASSWORD };
+    return { success: user.toLowerCase() === WEB_APP_USERNAME.toLowerCase() && pw === WEB_APP_PASSWORD };
   }
 
   // Auth gate for everything else
-  if (user !== WEB_APP_USERNAME || pw !== WEB_APP_PASSWORD) {
+  if (user.toLowerCase() !== WEB_APP_USERNAME.toLowerCase() || pw !== WEB_APP_PASSWORD) {
     return { success: false, error: "Unauthorized" };
   }
 
