@@ -96,10 +96,12 @@ input{font-family:inherit}
 
 /* ===== CARDS GRID ===== */
 .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.card{background:var(--surface);border:1px solid var(--outline-variant);border-top:4px solid var(--outline-variant);border-radius:14px;padding:24px;display:flex;flex-direction:column;position:relative;overflow:visible;cursor:pointer;box-shadow:0 4px 20px rgba(9,30,66,.06);transition:all .2s;user-select:none;z-index:1}
+.card{background:var(--surface);border:1px solid var(--outline-variant);border-radius:14px;padding:24px;display:flex;flex-direction:column;position:relative;overflow:visible;cursor:pointer;box-shadow:0 4px 20px rgba(9,30,66,.06);transition:all .2s;user-select:none;z-index:1}
 .card.menu-open{z-index:20}
-.card:hover{box-shadow:0 8px 30px rgba(9,30,66,.12);border-color:var(--outline);border-top-color:var(--primary)}
-.card.fav{border-top-color:var(--secondary)}
+.card:hover{box-shadow:0 8px 30px rgba(9,30,66,.12);border-color:var(--outline)}
+.card.fav .card-accent{background:var(--secondary);opacity:1}
+.card:hover .card-accent{opacity:1}
+.card-accent{position:absolute;top:0;left:0;right:0;height:4px;background:var(--primary);opacity:0;transition:opacity .2s;border-top-left-radius:13px;border-top-right-radius:13px}
 .card:active{transform:scale(.98)}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
 .card-identity{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
@@ -1572,6 +1574,7 @@ function renderCards(containerId,list,query,allowDrag){
     var ico=getIcon(a.label);
     var c1=c.substring(0,3),c2=c.substring(3);
     html+='<div class="card'+(a.fav?' fav':'')+'" data-oi="'+oi+'"'+(canDrag?' draggable="true" ondragstart="dStart(event)" ondragover="dOver(event)" ondragenter="dEnter(event)" ondragleave="dLeave(event)" ondrop="dDrop(event)" ondragend="dEnd(event)"':'')+' onclick="copyCode('+oi+')">';
+    html+='<div class="card-accent"></div>';
     html+='<div class="card-copied" id="copied'+oi+'">Copied!</div>';
     html+='<div class="card-top"><div class="card-identity">';
     if(canDrag)html+='<div class="drag-handle card-btn" onclick="event.stopPropagation()"><span class="ms">drag_indicator</span></div>';
