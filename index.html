@@ -2307,11 +2307,14 @@ function dEnd(e){
 
 /* Touch drag support for mobile */
 var touchDragEl=null,touchDragOi=null,touchClone=null,touchStartX=0,touchStartY=0,touchOffsetX=0,touchOffsetY=0;
+var isDragging=false;
 
 function cleanupTouchDrag(){
+  // Remove ALL orphaned clones (safety net)
+  document.querySelectorAll('.touch-drag-clone').forEach(function(el){el.remove()});
   document.querySelectorAll('.card').forEach(function(c){c.classList.remove('dragging','drag-over')});
-  if(touchClone&&touchClone.parentNode)touchClone.parentNode.removeChild(touchClone);
   touchClone=null;touchDragEl=null;touchDragOi=null;
+  isDragging=false;
 }
 
 document.addEventListener('touchstart',function(e){
@@ -2320,15 +2323,15 @@ document.addEventListener('touchstart',function(e){
   var card=handle.closest('.card');
   if(!card)return;
   e.preventDefault();
-  // Clean up any previous stuck drag
-  if(touchClone)cleanupTouchDrag();
+  cleanupTouchDrag();
+  isDragging=true;
   touchDragEl=card;
   touchDragOi=parseInt(card.dataset.oi);
   touchStartX=e.touches[0].clientX;
   touchStartY=e.touches[0].clientY;
-  // Create visual clone
   touchClone=card.cloneNode(true);
-  touchClone.style.cssText='position:fixed;opacity:0.8;z-index:999;pointer-events:none;transform:rotate(2deg);width:'+card.offsetWidth+'px;';
+  touchClone.className='touch-drag-clone';
+  touchClone.style.cssText='position:fixed;opacity:0.85;z-index:9999;pointer-events:none;transform:rotate(2deg) scale(1.03);width:'+card.offsetWidth+'px;border-radius:14px;box-shadow:0 12px 40px rgba(9,30,66,.25);transition:none;';
   var rect=card.getBoundingClientRect();
   touchOffsetX=touchStartX-rect.left;
   touchOffsetY=touchStartY-rect.top;
@@ -2339,7 +2342,7 @@ document.addEventListener('touchstart',function(e){
 },{passive:false});
 
 document.addEventListener('touchmove',function(e){
-  if(!touchClone)return;
+  if(!isDragging||!touchClone)return;
   e.preventDefault();
   var touch=e.touches[0];
   touchClone.style.left=(touch.clientX-touchOffsetX)+'px';
@@ -2350,16 +2353,19 @@ document.addEventListener('touchmove',function(e){
 },{passive:false});
 
 document.addEventListener('touchend',function(e){
-  if(!touchClone)return;
+  if(!isDragging)return;
+  var savedOi=touchDragOi;
+  var savedEl=touchDragEl;
   var touch=e.changedTouches[0];
-  var el=document.elementFromPoint(touch.clientX,touch.clientY);
-  if(el){var tc=el.closest('.card');if(tc&&tc!==touchDragEl){var targetOi=parseInt(tc.dataset.oi);if(touchDragOi!==null&&targetOi!==touchDragOi)doReorder(touchDragOi,targetOi)}}
+  // Cleanup FIRST so clone is gone before any re-render
   cleanupTouchDrag();
+  var el=document.elementFromPoint(touch.clientX,touch.clientY);
+  if(el){var tc=el.closest('.card');if(tc&&tc!==savedEl){var targetOi=parseInt(tc.dataset.oi);if(savedOi!==null&&!isNaN(targetOi)&&targetOi!==savedOi)doReorder(savedOi,targetOi)}}
 });
 
-document.addEventListener('touchcancel',function(){
-  cleanupTouchDrag();
-});
+document.addEventListener('touchcancel',function(){cleanupTouchDrag()});
+// Safety: remove any orphaned clones every 3s
+setInterval(function(){if(!isDragging)document.querySelectorAll('.touch-drag-clone').forEach(function(el){el.remove()})},3000);
 
 var reorderTimeout=null;
 
