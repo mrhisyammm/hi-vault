@@ -1,8 +1,19 @@
-const CACHE_NAME = 'hi-vault-v1.3';
+const CACHE_NAME = 'hi-vault-v2.0';
 const ASSETS = [
   './',
   './index.html',
+  './css/style.css',
+  './js/tutorial.js',
+  './js/crypto.js',
+  './js/app.js',
+  './js/totp.js',
+  './js/accounts.js',
+  './js/import-export.js',
+  './js/drag.js',
+  './js/auth.js',
   './manifest.json',
+  './assets/icons/icon-192x192.png',
+  './assets/icons/icon-512x512.png',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Manrope:wght@600;700;800&display=swap',
   'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js',
@@ -82,8 +93,9 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network-First for navigation (index.html) and API requests
-  if (e.request.mode === 'navigate' || e.request.url.includes('index.html') || e.request.url.includes('api')) {
+  // Network-First for navigation, app files, and API requests
+  var isAppFile = e.request.mode === 'navigate' || e.request.url.includes('index.html') || e.request.url.includes('/js/') || e.request.url.includes('/css/') || e.request.url.includes('api');
+  if (isAppFile) {
     e.respondWith(
       fetch(e.request).then(response => {
         return caches.open(CACHE_NAME).then(cache => {
