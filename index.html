@@ -243,8 +243,10 @@ input{font-family:inherit}
 .page-header{flex-direction:column;align-items:stretch;gap:12px}
 .page-title{font-size:22px;line-height:30px}
 .page-subtitle{font-size:14px}
-.page-actions{gap:8px}
-.search-box{flex:1}.search-box input{width:100%}
+.page-actions{display:flex;gap:8px;width:100%}
+.search-box{flex:1;min-width:0}
+.search-box input{width:100%!important;min-width:0!important}
+.btn-sort, .btn-primary-sm{flex-shrink:0}
 .card{padding:12px 16px}
 .card-top{margin-bottom:8px}
 .card-icon{width:36px;height:36px}
@@ -1265,6 +1267,9 @@ function hidePwaInstallButtons() {
   if(tickInterval)clearInterval(tickInterval);
   tickInterval=setInterval(tick,500);
   if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      window.location.reload();
+    });
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('./sw.js').then(function(reg) {
         console.log('SW registered');
