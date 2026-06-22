@@ -51,9 +51,10 @@ function tick(){
 
   if(left===30&&lastLeft!==30){
     refreshAll();
-    if(isLoggedIn && isOnline) {
-      loadAccounts();
-    }
+  }
+  var isReset=(left===30&&lastLeft!==30)||(left===15&&lastLeft!==15);
+  if(isReset&&isLoggedIn&&isOnline){
+    loadAccounts();
   }
   lastLeft=left;
 }

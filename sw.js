@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hi-vault-v3.2';
+const CACHE_NAME = 'hi-vault-v3.3';
 const ASSETS = [
   './',
   './index.html',

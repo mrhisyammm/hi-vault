@@ -225,3 +225,10 @@ if ('serviceWorker' in navigator) {
     }
   });
 }
+
+// Focus-based revalidation (TanStack SWR style) for instant multi-device sync
+window.addEventListener('focus', function() {
+  if (isLoggedIn && isOnline) {
+    loadAccounts();
+  }
+});

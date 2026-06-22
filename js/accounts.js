@@ -189,10 +189,20 @@ async function toggleFav(oi){
 }
 
 /* ===== ADD ACCOUNT ===== */
+function isValidBase32Secret(secret) {
+  var clean = secret.replace(/\s/g, '').toUpperCase();
+  if (clean.length < 8) return false;
+  return /^[A-Z2-7]+=*$/.test(clean);
+}
+
 async function doAddAccount(){
   var label=document.getElementById('addLabel').value.trim();
   var secret=document.getElementById('addSecret').value.trim().replace(/\s/g,'').toUpperCase();
   if(!label||!secret){showToast('Fill in both fields',true);return}
+  if(!isValidBase32Secret(secret)){
+    showToast('Invalid Base32 secret (min 8 chars, A-Z, 2-7)',true);
+    return;
+  }
   closeModal('modalAdd');
   document.getElementById('addLabel').value='';
   document.getElementById('addSecret').value='';
@@ -249,6 +259,10 @@ async function doEditAccount(){
   var label=document.getElementById('editLabel').value.trim();
   var secret=document.getElementById('editSecret').value.trim().replace(/\s/g,'').toUpperCase();
   if(!label||!secret){showToast('Fields cannot be empty',true);return}
+  if(!isValidBase32Secret(secret)){
+    showToast('Invalid Base32 secret (min 8 chars, A-Z, 2-7)',true);
+    return;
+  }
   var a=accounts[editTargetOi];
   var oldLabel=a.label;
   var oldSecret=a.secret;
