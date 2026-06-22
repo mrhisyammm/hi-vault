@@ -3,6 +3,7 @@ function dStart(e){
   var card=e.target.closest('.card');
   dragSrcIndex=parseInt(card.dataset.oi);
   card.classList.add('dragging');
+  isDragging=true;
   e.dataTransfer.effectAllowed='move';
   e.dataTransfer.setData('text/plain',dragSrcIndex);
 }
@@ -16,11 +17,13 @@ function dDrop(e){
   card.classList.remove('drag-over');
   var targetIndex=parseInt(card.dataset.oi);
   if(dragSrcIndex===targetIndex||dragSrcIndex===null)return;
+  isDragging=false;
   doReorder(dragSrcIndex,targetIndex);
 }
 function dEnd(e){
   document.querySelectorAll('.card').forEach(function(c){c.classList.remove('dragging','drag-over')});
   dragSrcIndex=null;
+  isDragging=false;
 }
 
 /* ===== TOUCH DRAG (Mobile) ===== */

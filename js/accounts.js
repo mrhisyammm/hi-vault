@@ -71,6 +71,7 @@ function getSortedAccounts(list,mode){
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
 function renderView(){
+  if(isDragging)return;
   if(currentView==='accounts')renderCards('cardsContainer',accounts,document.getElementById('searchInput').value,true,sortMode);
   else if(currentView==='favorites'){
     var favs=accounts.filter(function(a){return a.fav});
