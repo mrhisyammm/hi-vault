@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hi-vault-v3.1';
+const CACHE_NAME = 'hi-vault-v3.2';
 const ASSETS = [
   './',
   './index.html',
@@ -167,6 +167,11 @@ async function syncOfflineQueue() {
         // Stop queue loop if connection fails again
         break;
       }
+    }
+    // Notify open tabs
+    const clientsList = await self.clients.matchAll();
+    for (const client of clientsList) {
+      client.postMessage({ type: 'SYNC_COMPLETE' });
     }
   } catch (err) {
     console.error('Background sync failed:', err);

@@ -216,3 +216,12 @@ function switchTutorialLang(lang){
   var sel=document.getElementById('tutorialLang');
   if(sel)sel.value=lang;
 }
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'SYNC_COMPLETE') {
+      showToast('Sync complete! Refreshing...', false);
+      loadAccounts();
+    }
+  });
+}

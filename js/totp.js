@@ -49,6 +49,11 @@ function tick(){
 
   if (currentView === 'live') updateLiveTOTP();
 
-  if(left===30&&lastLeft!==30)refreshAll();
+  if(left===30&&lastLeft!==30){
+    refreshAll();
+    if(isLoggedIn && isOnline) {
+      loadAccounts();
+    }
+  }
   lastLeft=left;
 }
