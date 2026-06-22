@@ -273,3 +273,15 @@ function triggerSyncOnInteraction() {
 }
 document.addEventListener('click', triggerSyncOnInteraction);
 document.addEventListener('touchstart', triggerSyncOnInteraction);
+
+// Initialize language on script load
+(function initLang() {
+  var lang = getLangPreference();
+  document.documentElement.setAttribute('data-lang', lang);
+  window.addEventListener('DOMContentLoaded', function() {
+    ['tutorialLang', 'aboutLang', 'loginAboutLang'].forEach(function(id) {
+      var sel = document.getElementById(id);
+      if (sel) sel.value = lang;
+    });
+  });
+})();

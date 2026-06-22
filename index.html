@@ -21,6 +21,8 @@
   (function(){
     var t=localStorage.getItem('hv_theme')||'system';
     document.documentElement.setAttribute('data-theme', t);
+    var l=localStorage.getItem('hv_lang')||'en';
+    document.documentElement.setAttribute('data-lang', l);
   })();
 </script>
 </head>
@@ -120,8 +122,7 @@
 
 <!-- ===== LOGIN SCREEN ===== -->
 <div class="screen-login" id="screenLogin">
-<div style="display:flex; flex-direction:column; align-items:center; width:100%; max-width:800px; margin:0 auto; padding-top:20px;">
-<div class="login-card">
+<div class="login-container">
 <div class="login-logo">
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <defs><linearGradient id="bg_login" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0A63FF"/><stop offset="100%" stop-color="#003D9B"/></linearGradient></defs>
