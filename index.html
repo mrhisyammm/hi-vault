@@ -225,7 +225,7 @@
 <!-- VIEW: All Accounts -->
 <div class="view active" id="viewAccounts">
 <header class="page-header">
-<div><h2 class="page-title">All Accounts</h2><p class="page-subtitle">Access your two-factor authentication tokens securely.</p></div>
+<div><h2 class="page-title">All Accounts</h2><p class="page-subtitle">Access your 2FA tokens securely.</p></div>
 <div class="page-actions">
 <div class="search-box"><span class="ms">search</span><input type="text" id="searchInput" placeholder="Search accounts..." oninput="renderView()"></div>
 <button class="btn-sort" id="btnSortAZ" onclick="toggleSort()" title="Sort A-Z"><span class="ms">sort_by_alpha</span><span class="sort-label">A-Z</span></button>
@@ -250,7 +250,7 @@
 <!-- VIEW: Live 2FA -->
 <div class="view" id="viewLive">
 <header class="page-header">
-<div><h2 class="page-title">Live 2FA Decoder</h2><p class="page-subtitle">Instantly generate OTP codes from any secret key without saving.</p></div>
+<div><h2 class="page-title">Live 2FA Decoder</h2><p class="page-subtitle">Generate OTP codes from any secret key.</p></div>
 </header>
 <div class="settings-card" style="max-width:440px;">
   <h3>Live TOTP Generator</h3>
@@ -439,7 +439,6 @@ var WEB_APP_PASSWORD = "password";</pre>
 <div class="fs-scanner" id="fsScanner">
   <button class="fs-close" onclick="stopFsScanner()"><span class="ms">close</span></button>
   <div class="fs-view" id="fsReader"></div>
-  <div class="fs-hint">Point your camera at the QR code</div>
   <div class="fs-err" id="fsErrMsg"></div>
 </div>
 

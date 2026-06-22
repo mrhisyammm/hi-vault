@@ -147,15 +147,26 @@ function decodeMigrationQR(decodedText) {
         var issuer = url.searchParams.get('issuer');
         if(issuer && label.indexOf(issuer)===-1) label = issuer + ' (' + label + ')';
         if (label && secret) {
-          doBulkImport([{ label: label, secret: secret.toUpperCase() }]);
+          document.getElementById('addLabel').value = label;
+          document.getElementById('addSecret').value = secret.toUpperCase();
+          openModal('modalAdd');
+          showToast('Account details loaded');
         } else {
           throw new Error('Missing info');
         }
       } else {
-        throw new Error('Invalid URI');
+        var clean = decodedText.trim().replace(/\s/g,'').toUpperCase();
+        if (/^[A-Z2-7]+=*$/.test(clean)) {
+          document.getElementById('addLabel').value = '';
+          document.getElementById('addSecret').value = clean;
+          openModal('modalAdd');
+          showToast('Secret key loaded');
+        } else {
+          throw new Error('Invalid code content');
+        }
       }
     } catch(err) {
-      showToast('Not a valid Authenticator QR code', true);
+      showToast('Not a valid QR code: ' + err.message, true);
     }
   }
 }
