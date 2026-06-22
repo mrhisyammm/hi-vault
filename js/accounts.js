@@ -191,7 +191,7 @@ async function toggleFav(oi){
 /* ===== ADD ACCOUNT ===== */
 function isValidBase32Secret(secret) {
   var clean = secret.replace(/\s/g, '').toUpperCase();
-  if (clean.length < 8) return false;
+  if (clean.length < 3) return false;
   return /^[A-Z2-7]+=*$/.test(clean);
 }
 

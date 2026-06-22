@@ -108,6 +108,13 @@ async function addToOfflineQueue(action,params){
 }
 
 async function processOfflineQueue(){
+  if ('serviceWorker' in navigator && 'SyncManager' in window) {
+    try{
+      var reg=await navigator.serviceWorker.ready;
+      await reg.sync.register('sync-hv-vault');
+      return;
+    }catch(e){}
+  }
   if(isSyncing||!navigator.onLine)return;
   var q=await dbGetAll('queue');
   if(q.length===0)return;
@@ -232,3 +239,17 @@ window.addEventListener('focus', function() {
     loadAccounts();
   }
 });
+
+// Throttled sync on user interaction (clicks or touch starts, max once every 5 seconds)
+var lastSyncTime = 0;
+function triggerSyncOnInteraction() {
+  var now = Date.now();
+  if (now - lastSyncTime > 5000) {
+    lastSyncTime = now;
+    if (isLoggedIn && isOnline) {
+      loadAccounts();
+    }
+  }
+}
+document.addEventListener('click', triggerSyncOnInteraction);
+document.addEventListener('touchstart', triggerSyncOnInteraction);
