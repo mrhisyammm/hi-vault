@@ -120,6 +120,7 @@
 
 <!-- ===== LOGIN SCREEN ===== -->
 <div class="screen-login" id="screenLogin">
+<div style="display:flex; flex-direction:column; align-items:center; width:100%; max-width:800px; margin:0 auto; padding-top:20px;">
 <div class="login-card">
 <div class="login-logo">
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -144,7 +145,7 @@
   <span style="color:var(--outline-variant);">|</span>
   <button onclick="showPublicView('tutorial')" style="color:var(--primary); display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"><span class="ms" style="font-size:16px;">menu_book</span> Setup Tutorial</button>
   <span style="color:var(--outline-variant);">|</span>
-  <button onclick="showPublicView('about')" style="color:var(--primary); display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"><span class="ms" style="font-size:16px;">info</span> About</button>
+  <button onclick="scrollToLoginAbout()" style="color:var(--primary); display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"><span class="ms" style="font-size:16px;">info</span> About</button>
   <span id="pwaDividerLogin" style="color:var(--outline-variant); display:none;">|</span>
   <button id="btnInstallPwaLogin" onclick="triggerPwaInstall()" style="color:var(--secondary); display:none; align-items:center; gap:4px; font-weight:600; cursor:pointer;"><span class="ms" style="font-size:16px; color:var(--secondary);">download</span> Install App</button>
 </div>
@@ -155,6 +156,140 @@
 <button class="setup-save" onclick="saveApiUrlFromLogin()">Save URL</button>
 <div class="setup-hint">Paste your Google Apps Script Web App URL.<br>Deploy &gt; New deployment &gt; Web app &gt; Copy URL</div>
 </details>
+</div>
+</div>
+
+<!-- About Section on Login Screen -->
+<div id="loginAboutSection" style="margin-top:40px; width:100%;">
+  <div class="settings-card" style="margin:0 0 20px; max-width:100%; text-align:left;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--outline-variant); padding-bottom:12px;">
+      <h3 style="margin:0;">
+        <span class="lang-en">Why Hi-Vault?</span>
+        <span class="lang-id">Mengapa Hi-Vault?</span>
+      </h3>
+      <select id="loginAboutLang" onchange="switchLang(this.value)" style="width:auto; padding:6px 12px; background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:999px; color:var(--on-surface); font-size:11px; font-weight:600; outline:none; cursor:pointer;">
+        <option value="en">🇺🇸 EN</option>
+        <option value="id">🇮🇩 ID</option>
+      </select>
+    </div>
+    <p style="font-size:14px; line-height:1.6; color:var(--on-surface-variant);">
+      <span class="lang-en">Hi-Vault is a secure, offline-first 2FA TOTP manager PWA. Unlike typical authenticators, it puts you in complete control of your data by using your own Google Spreadsheet (via Google Apps Script) as the database.</span>
+      <span class="lang-id">Hi-Vault adalah PWA pengelola 2FA TOTP yang aman dan offline-first. Berbeda dengan autentikator biasa, Hi-Vault memberikan Anda kendali penuh atas data Anda dengan menggunakan Google Spreadsheet pribadi Anda (via Google Apps Script) sebagai database.</span>
+    </p>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; width:100%; margin-bottom:24px;">
+    <!-- Card 1: Data Ownership -->
+    <div class="settings-card" style="margin:0; padding:24px; text-align:left; max-width:100%;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <span class="ms" style="color:var(--primary); font-size:24px;">database</span>
+        <h4 style="margin:0; font-family:Manrope; font-size:16px; color:var(--on-surface);">
+          <span class="lang-en">100% Self-Hosted</span>
+          <span class="lang-id">100% Milik Sendiri</span>
+        </h4>
+      </div>
+      <p style="font-size:13px; line-height:1.5; color:var(--on-surface-variant);">
+        <span class="lang-en">Your 2FA secrets are saved on your own Google Sheets spreadsheet. No third-party company holds your keys or can lock you out of your accounts.</span>
+        <span class="lang-id">Kunci rahasia 2FA Anda disimpan di Google Sheets Anda sendiri. Tidak ada perusahaan pihak ketiga yang memegang kunci Anda atau dapat mengunci akun Anda.</span>
+      </p>
+    </div>
+
+    <!-- Card 2: Security -->
+    <div class="settings-card" style="margin:0; padding:24px; text-align:left; max-width:100%;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <span class="ms" style="color:var(--primary); font-size:24px;">lock</span>
+        <h4 style="margin:0; font-family:Manrope; font-size:16px; color:var(--on-surface);">
+          <span class="lang-en">AES-GCM Encryption</span>
+          <span class="lang-id">Enkripsi AES-GCM</span>
+        </h4>
+      </div>
+      <p style="font-size:13px; line-height:1.5; color:var(--on-surface-variant);">
+        <span class="lang-en">Cached credentials and accounts are encrypted locally on your device using military-grade AES-GCM 256-bit encryption with PBKDF2 key derivation.</span>
+        <span class="lang-id">Kredensial dan akun yang di-cache dienkripsi secara lokal di perangkat Anda menggunakan enkripsi AES-GCM 256-bit kelas militer dengan derivasi PBKDF2.</span>
+      </p>
+    </div>
+
+    <!-- Card 3: Offline-First -->
+    <div class="settings-card" style="margin:0; padding:24px; text-align:left; max-width:100%;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <span class="ms" style="color:var(--primary); font-size:24px;">offline_bolt</span>
+        <h4 style="margin:0; font-family:Manrope; font-size:16px; color:var(--on-surface);">
+          <span class="lang-en">Offline-First Sync</span>
+          <span class="lang-id">Sinkronisasi Offline-First</span>
+        </h4>
+      </div>
+      <p style="font-size:13px; line-height:1.5; color:var(--on-surface-variant);">
+        <span class="lang-en">Add, edit, or delete accounts even when offline. Your changes are queued locally and automatically sync to Google Sheets as soon as you reconnect.</span>
+        <span class="lang-id">Tambah, edit, atau hapus akun bahkan saat offline. Perubahan Anda antre secara lokal dan otomatis tersinkronisasi ke Google Sheets saat Anda online.</span>
+      </p>
+    </div>
+
+    <!-- Card 4: Open & Auditable -->
+    <div class="settings-card" style="margin:0; padding:24px; text-align:left; max-width:100%;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <span class="ms" style="color:var(--primary); font-size:24px;">code</span>
+        <h4 style="margin:0; font-family:Manrope; font-size:16px; color:var(--on-surface);">
+          <span class="lang-en">Open Source &amp; Private</span>
+          <span class="lang-id">Open Source &amp; Privat</span>
+        </h4>
+      </div>
+      <p style="font-size:13px; line-height:1.5; color:var(--on-surface-variant);">
+        <span class="lang-en">No proprietary analytics, closed-source tracking, or ads. The entire codebase (including the Apps Script backend) is completely transparent and inspectable.</span>
+        <span class="lang-id">Tanpa analitik kepemilikan, pelacak sumber tertutup, atau iklan. Seluruh kode (termasuk backend Apps Script) sepenuhnya transparan dan dapat diaudit.</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="settings-card" style="margin:0 0 24px; padding:32px; text-align:left; max-width:100%;">
+    <h3>
+      <span class="lang-en">Comparison Table</span>
+      <span class="lang-id">Tabel Perbandingan</span>
+    </h3>
+    <div style="overflow-x:auto; margin-top:12px;">
+      <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left; color:var(--on-surface-variant);">
+        <thead>
+          <tr style="border-bottom:2px solid var(--outline-variant); color:var(--on-surface); font-weight:700;">
+            <th style="padding:10px;"><span class="lang-en">Feature</span><span class="lang-id">Fitur</span></th>
+            <th style="padding:10px; font-family:Manrope; color:var(--primary);">Hi-Vault</th>
+            <th style="padding:10px;">Google Authenticator</th>
+            <th style="padding:10px;"><span class="lang-en">Others (Authy, etc.)</span><span class="lang-id">Lainnya (Authy, dll)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--outline-variant);">
+            <td style="padding:10px; font-weight:600; color:var(--on-surface);"><span class="lang-en">Data Ownership</span><span class="lang-id">Kepemilikan Data</span></td>
+            <td style="padding:10px; font-weight:700; color:var(--secondary);"><span class="lang-en">You (Google Drive)</span><span class="lang-id">Anda (Google Drive)</span></td>
+            <td style="padding:10px;">Google Cloud</td>
+            <td style="padding:10px;"><span class="lang-en">Corporate Cloud</span><span class="lang-id">Cloud Perusahaan</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--outline-variant);">
+            <td style="padding:10px; font-weight:600; color:var(--on-surface);"><span class="lang-en">Source Code</span><span class="lang-id">Kode Sumber</span></td>
+            <td style="padding:10px; font-weight:700; color:var(--secondary);">Open Source</td>
+            <td style="padding:10px;">Closed Source</td>
+            <td style="padding:10px;">Closed Source</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--outline-variant);">
+            <td style="padding:10px; font-weight:600; color:var(--on-surface);"><span class="lang-en">Offline-First Sync</span><span class="lang-id">Sync Offline-First</span></td>
+            <td style="padding:10px; font-weight:700; color:var(--secondary);"><span class="lang-en">Yes (Queued local write)</span><span class="lang-id">Ya (Ditulis lokal dulu)</span></td>
+            <td style="padding:10px;"><span class="lang-en">No (Requires network)</span><span class="lang-id">Tidak (Butuh koneksi)</span></td>
+            <td style="padding:10px;"><span class="lang-en">No (Requires network)</span><span class="lang-id">Tidak (Butuh koneksi)</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--outline-variant);">
+            <td style="padding:10px; font-weight:600; color:var(--on-surface);"><span class="lang-en">Export Formats</span><span class="lang-id">Format Ekspor</span></td>
+            <td style="padding:10px; font-weight:700; color:var(--secondary);">CSV, QR, Migration Protobuf</td>
+            <td style="padding:10px;"><span class="lang-en">Migration QR Only</span><span class="lang-id">Hanya QR Migrasi</span></td>
+            <td style="padding:10px;"><span class="lang-en">None / Proprietary</span><span class="lang-id">Sangat Terbatas</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--outline-variant);">
+            <td style="padding:10px; font-weight:600; color:var(--on-surface);"><span class="lang-en">Privacy / Trackers</span><span class="lang-id">Privasi / Pelacak</span></td>
+            <td style="padding:10px; font-weight:700; color:var(--secondary);"><span class="lang-en">None (0 trackers)</span><span class="lang-id">Tidak Ada (0 tracker)</span></td>
+            <td style="padding:10px;"><span class="lang-en">Google Analytics</span><span class="lang-id">Google Analytics</span></td>
+            <td style="padding:10px;"><span class="lang-en">Ad/Analytics SDKs</span><span class="lang-id">SDK Iklan/Analitik</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 </div>
 </div>

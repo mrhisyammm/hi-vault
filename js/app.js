@@ -232,14 +232,16 @@ function applyThemePreference(t){
 function getLangPreference(){return localStorage.getItem('hv_lang')||'en'}
 function switchLang(lang){
   localStorage.setItem('hv_lang',lang);
-  ['viewTutorial','viewAbout'].forEach(function(id){
-    var view=document.getElementById(id);
-    if(view)view.setAttribute('data-lang',lang);
-  });
-  ['tutorialLang','aboutLang'].forEach(function(id){
+  document.documentElement.setAttribute('data-lang',lang);
+  ['tutorialLang','aboutLang','loginAboutLang'].forEach(function(id){
     var sel=document.getElementById(id);
     if(sel)sel.value=lang;
   });
+}
+
+function scrollToLoginAbout(){
+  var el=document.getElementById('loginAboutSection');
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 if ('serviceWorker' in navigator) {
