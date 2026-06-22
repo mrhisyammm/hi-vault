@@ -252,7 +252,7 @@
 <header class="page-header">
 <div><h2 class="page-title">Live 2FA Decoder</h2><p class="page-subtitle">Instantly generate OTP codes from any secret key without saving.</p></div>
 </header>
-<div class="settings-card" style="max-width:560px;">
+<div class="settings-card" style="max-width:440px;">
   <h3>Live TOTP Generator</h3>
   <p>Input your Base32 secret key below to decode the current 6-digit OTP code in real-time.</p>
   <div class="settings-field">
@@ -268,7 +268,7 @@
       <button class="btn-lock-small" onclick="stopLiveQRScanner()" style="margin:8px auto 0; background:var(--error-container); color:var(--error); width:fit-content; padding:6px 12px;"><span class="ms" style="font-size:14px;">close</span> Close Camera</button>
     </div>
   </div>
-  <div class="card" id="livePreviewCard" style="margin-top:24px; max-width:400px; cursor:pointer;" onclick="copyLiveCode()">
+  <div class="card" id="livePreviewCard" style="margin-top:24px; max-width:360px; cursor:pointer;" onclick="copyLiveCode()">
     <div class="card-copied" id="copiedLive">Copied!</div>
     <div class="card-top">
       <div class="card-identity">
@@ -439,7 +439,7 @@ var WEB_APP_PASSWORD = "password";</pre>
 <div class="fs-scanner" id="fsScanner">
   <button class="fs-close" onclick="stopFsScanner()"><span class="ms">close</span></button>
   <div class="fs-view" id="fsReader"></div>
-  <div class="fs-reticle"><div class="fs-reticle-inner"></div></div>
+  <div class="fs-reticle"><div class="fs-reticle-inner"><div class="fs-laser"></div></div></div>
   <div class="fs-hint">Point your camera at the QR code</div>
   <div class="fs-err" id="fsErrMsg"></div>
 </div>

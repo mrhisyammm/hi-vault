@@ -380,8 +380,9 @@ function startFsScanner(callback){
     {facingMode:"environment"},
     {fps:15,qrbox:{width:240,height:240}},
     function(decodedText){
+      var cb=fsScanCallback;
       stopFsScanner();
-      if(fsScanCallback)fsScanCallback(decodedText);
+      if(cb)cb(decodedText);
     },
     function(error){}
   ).catch(function(err){
@@ -501,7 +502,6 @@ function saveLiveToMyAccounts(){
   var secret=input.value.trim().replace(/\s/g,'').toUpperCase();
   document.getElementById('addLabel').value=liveDecodedLabel||'Live Decoded';
   document.getElementById('addSecret').value=secret;
-  switchView('accounts');
   openModal('modalAdd');
 }
 
