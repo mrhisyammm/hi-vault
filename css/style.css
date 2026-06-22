@@ -347,3 +347,14 @@ input{font-family:inherit}
 .settings-card{padding:24px}
 }
 @media(max-width:380px){.card-code{font-size:24px;letter-spacing:.08em;gap:8px}}
+
+/* ===== LANGUAGE SWITCHER ===== */
+#viewTutorial[data-lang="en"] .lang-id { display: none !important; }
+#viewTutorial[data-lang="en"] .lang-en { display: block !important; }
+#viewTutorial[data-lang="en"] span.lang-en { display: inline !important; }
+#viewTutorial[data-lang="en"] li.lang-en { display: list-item !important; }
+
+#viewTutorial[data-lang="id"] .lang-en { display: none !important; }
+#viewTutorial[data-lang="id"] .lang-id { display: block !important; }
+#viewTutorial[data-lang="id"] span.lang-id { display: inline !important; }
+#viewTutorial[data-lang="id"] li.lang-id { display: list-item !important; }

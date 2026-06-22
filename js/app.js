@@ -60,7 +60,14 @@ function switchView(v){
   else if(v==='favorites')document.getElementById('viewFavorites').classList.add('active');
   else if(v==='live')document.getElementById('viewLive').classList.add('active');
   else if(v==='impexp')document.getElementById('viewImpExp').classList.add('active');
-  else if(v==='tutorial')document.getElementById('viewTutorial').classList.add('active');
+  else if(v==='tutorial'){
+    document.getElementById('viewTutorial').classList.add('active');
+    var lang=getTutorialLangPreference();
+    var view=document.getElementById('viewTutorial');
+    if(view)view.setAttribute('data-lang',lang);
+    var sel=document.getElementById('tutorialLang');
+    if(sel)sel.value=lang;
+  }
   else if(v==='settings'){
     document.getElementById('viewSettings').classList.add('active');
     document.getElementById('settingsApiUrl').value=getApiUrl();
@@ -198,4 +205,14 @@ function applyThemePreference(t){
   document.documentElement.setAttribute('data-theme', t);
   var sel=document.getElementById('settingsTheme');
   if(sel)sel.value=t;
+}
+
+/* ===== TUTORIAL LANGUAGE ===== */
+function getTutorialLangPreference(){return localStorage.getItem('hv_tutorial_lang')||'en'}
+function switchTutorialLang(lang){
+  localStorage.setItem('hv_tutorial_lang',lang);
+  var view=document.getElementById('viewTutorial');
+  if(view)view.setAttribute('data-lang',lang);
+  var sel=document.getElementById('tutorialLang');
+  if(sel)sel.value=lang;
 }

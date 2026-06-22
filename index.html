@@ -295,67 +295,136 @@
 </div>
 
 <!-- VIEW: Tutorial -->
-<div class="view" id="viewTutorial">
+<div class="view" id="viewTutorial" data-lang="en">
 <header class="page-header">
-<div><h2 class="page-title">Setup Tutorial</h2><p class="page-subtitle">Learn how to configure your Google Sheets backend to get the Web App URL.</p></div>
+<div>
+  <h2 class="page-title"><span class="lang-en">Setup Tutorial</span><span class="lang-id">Panduan Pengaturan</span></h2>
+  <p class="page-subtitle">
+    <span class="lang-en">Learn how to configure your Google Sheets backend to get the Web App URL.</span>
+    <span class="lang-id">Pelajari cara mengonfigurasi Google Sheets backend untuk mendapatkan Web App URL.</span>
+  </p>
+</div>
+<div class="page-actions">
+  <select id="tutorialLang" onchange="switchTutorialLang(this.value)" style="width:auto; padding:10px 16px; background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:999px; color:var(--on-surface); font-size:13px; font-weight:600; outline:none; transition:border-color .2s; cursor:pointer;">
+    <option value="en">🇺🇸 English</option>
+    <option value="id">🇮🇩 Indonesia</option>
+  </select>
+</div>
 </header>
 <div class="settings-card" style="max-width:800px; margin-bottom:24px;">
-<h3>1. Create Google Sheet &amp; Apps Script</h3>
-<p>Create a new Google Spreadsheet on your Google Drive and open the script editor.</p>
+<h3>
+  <span class="lang-en">1. Create Google Sheet &amp; Apps Script</span>
+  <span class="lang-id">1. Buat Google Sheet &amp; Apps Script</span>
+</h3>
+<p>
+  <span class="lang-en">Create a new Google Spreadsheet on your Google Drive and open the script editor.</span>
+  <span class="lang-id">Buat Google Spreadsheet baru di Google Drive Anda dan buka editor skrip.</span>
+</p>
 <ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
-  <li>Create a new Google Sheet at <a href="https://sheets.new" target="_blank" style="color:var(--primary); font-weight:600;">sheets.new</a>.</li>
-  <li>Rename the active sheet tab at the bottom-left corner to <strong>2FA Vault</strong>.</li>
-  <li>Click on the menu bar: <strong>Extensions &gt; Apps Script</strong>. This opens the script editor in a new tab.</li>
+  <li class="lang-en">Create a new Google Sheet at <a href="https://sheets.new" target="_blank" style="color:var(--primary); font-weight:600;">sheets.new</a>.</li>
+  <li class="lang-id">Buat Google Sheet baru di <a href="https://sheets.new" target="_blank" style="color:var(--primary); font-weight:600;">sheets.new</a>.</li>
+  <li class="lang-en">Rename the active sheet tab at the bottom-left corner to <strong>2FA Vault</strong>.</li>
+  <li class="lang-id">Ubah nama tab lembar aktif di sudut kiri bawah menjadi <strong>2FA Vault</strong>.</li>
+  <li class="lang-en">Click on the menu bar: <strong>Extensions &gt; Apps Script</strong>. This opens the script editor in a new tab.</li>
+  <li class="lang-id">Klik pada menu bar: <strong>Extensions &gt; Apps Script</strong> (Ekstensi &gt; Apps Script). Ini akan membuka editor skrip di tab baru.</li>
 </ol>
 </div>
 <div class="settings-card" style="max-width:800px; margin-bottom:24px;">
-<h3>2. Copy &amp; Paste Backend Code</h3>
-<p>Copy the code below, paste it into the editor, and configure your credentials.</p>
+<h3>
+  <span class="lang-en">2. Copy &amp; Paste Backend Code</span>
+  <span class="lang-id">2. Salin &amp; Tempel Kode Backend</span>
+</h3>
+<p>
+  <span class="lang-en">Copy the code below, paste it into the editor, and configure your credentials.</span>
+  <span class="lang-id">Salin kode di bawah ini, tempelkan ke editor, dan konfigurasi kredensial Anda.</span>
+</p>
 <div style="margin-top:12px; margin-bottom:12px;">
-  <button class="btn-primary-sm" onclick="copyGasCode()" style="padding:8px 16px; font-size:12px;"><span class="ms" style="font-size:16px;">content_copy</span> Copy Code</button>
+  <button class="btn-primary-sm" onclick="copyGasCode()" style="padding:8px 16px; font-size:12px;"><span class="ms" style="font-size:16px;">content_copy</span> <span class="lang-en">Copy Code</span><span class="lang-id">Salin Kode</span></button>
 </div>
 <pre style="background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:10px; padding:16px; font-family:'JetBrains Mono',monospace; font-size:11px; max-height:240px; overflow:auto; color:var(--on-surface-variant); white-space:pre-wrap; word-break:break-all;" id="gasCodePre">Loading script code...</pre>
 <ol style="margin-top:12px; margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
-  <li>Delete all default code inside the editor (usually <code>function myFunction() { ... }</code>).</li>
-  <li>Paste the copied script code into the editor.</li>
-  <li><strong>Important:</strong> Find lines 1 &amp; 2 in the editor:
+  <li class="lang-en">Delete all default code inside the editor (usually <code>function myFunction() { ... }</code>).</li>
+  <li class="lang-id">Hapus semua kode bawaan di dalam editor (biasanya <code>function myFunction() { ... }</code>).</li>
+  <li class="lang-en">Paste the copied script code into the editor.</li>
+  <li class="lang-id">Tempel kode skrip yang sudah disalin ke dalam editor.</li>
+  <li>
+    <strong>
+      <span class="lang-en">Important:</span>
+      <span class="lang-id">Penting:</span>
+    </strong>
+    <span class="lang-en">Find lines 1 &amp; 2 in the editor:</span>
+    <span class="lang-id">Cari baris 1 &amp; 2 di editor:</span>
     <pre style="background:var(--surface-container-high); padding:6px 12px; border-radius:6px; margin:6px 0; font-family:'JetBrains Mono'; font-size:12px; display:block; overflow-x:auto; max-width:100%; box-sizing:border-box; letter-spacing:0.5px;">var WEB_APP_USERNAME = "user";
 var WEB_APP_PASSWORD = "password";</pre>
-    Change these values at the very top of the editor to secure your vault!
+    <span class="lang-en">Change these values at the very top of the editor to secure your vault!</span>
+    <span class="lang-id">Ubah nilai ini di bagian paling atas editor untuk mengamankan vault Anda!</span>
   </li>
-  <li>Click the <strong>Save project</strong> button (disk icon) at the top.</li>
+  <li class="lang-en">Click the <strong>Save project</strong> button (disk icon) at the top.</li>
+  <li class="lang-id">Klik tombol <strong>Save project</strong> (ikon disket) di bagian atas.</li>
 </ol>
 </div>
 <div class="settings-card" style="max-width:800px; margin-bottom:24px;">
-<h3>3. Format the Spreadsheet</h3>
-<p>Run the setup function to format columns and set formulas automatically.</p>
+<h3>
+  <span class="lang-en">3. Format the Spreadsheet</span>
+  <span class="lang-id">3. Format Spreadsheet</span>
+</h3>
+<p>
+  <span class="lang-en">Run the setup function to format columns and set formulas automatically.</span>
+  <span class="lang-id">Jalankan fungsi setup untuk memformat kolom dan memasang rumus secara otomatis.</span>
+</p>
 <ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
-  <li>Select the function <strong>setupSheet</strong> from the dropdown menu at the top (next to Debug/Run).</li>
-  <li>Click the <strong>Run</strong> button.</li>
-  <li>An authorization prompt will appear. Click <strong>Review Permissions</strong>, select your Google Account, click <strong>Advanced</strong> (at the bottom), and choose <strong>Go to 2FA Vault (unsafe)</strong>. Then click <strong>Allow</strong>.</li>
-  <li>Verify that your Google Sheet has been automatically formatted with headings and checkboxes.</li>
+  <li class="lang-en">Select the function <strong>setupSheet</strong> from the dropdown menu at the top (next to Debug/Run).</li>
+  <li class="lang-id">Pilih fungsi <strong>setupSheet</strong> dari menu dropdown di bagian atas (di sebelah Debug/Run).</li>
+  <li class="lang-en">Click the <strong>Run</strong> button.</li>
+  <li class="lang-id">Klik tombol <strong>Run</strong> (Jalankan).</li>
+  <li class="lang-en">An authorization prompt will appear. Click <strong>Review Permissions</strong>, select your Google Account, click <strong>Advanced</strong> (at the bottom), and choose <strong>Go to 2FA Vault (unsafe)</strong>. Then click <strong>Allow</strong>.</li>
+  <li class="lang-id">Prompt otorisasi izin akses akan muncul. Klik <strong>Review Permissions</strong> (Tinjau Izin), pilih Akun Google Anda, klik <strong>Advanced</strong> (Lanjutan) di bagian bawah, lalu pilih <strong>Go to 2FA Vault (unsafe)</strong>. Kemudian klik <strong>Allow</strong> (Izinkan).</li>
+  <li class="lang-en">Verify that your Google Sheet has been automatically formatted with headings and checkboxes.</li>
+  <li class="lang-id">Pastikan Google Sheet Anda telah terformat secara otomatis dengan judul kolom dan kotak centang.</li>
 </ol>
 </div>
 <div class="settings-card" style="max-width:800px; margin-bottom:24px;">
-<h3>4. Deploy as Web App</h3>
-<p>Deploy the script publicly so the Vercel app can communicate with it.</p>
+<h3>
+  <span class="lang-en">4. Deploy as Web App</span>
+  <span class="lang-id">4. Deploy sebagai Web App</span>
+</h3>
+<p>
+  <span class="lang-en">Deploy the script publicly so the Vercel app can communicate with it.</span>
+  <span class="lang-id">Deploy skrip secara publik agar aplikasi Vercel dapat berkomunikasi dengannya.</span>
+</p>
 <ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
-  <li>In the Apps Script editor, click the blue <strong>Deploy &gt; New deployment</strong> button at the top-right.</li>
-  <li>Click the gear icon next to "Select type" and select <strong>Web app</strong>.</li>
-  <li>Enter a description (e.g., <code>Hi-Vault API</code>).</li>
-  <li>Execute as: <strong>Me (your email)</strong>.</li>
-  <li>Who has access: <strong>Anyone</strong>.</li>
-  <li>Click <strong>Deploy</strong>, then copy the generated <strong>Web app URL</strong>.</li>
+  <li class="lang-en">In the Apps Script editor, click the blue <strong>Deploy &gt; New deployment</strong> button at the top-right.</li>
+  <li class="lang-id">Di editor Apps Script, klik tombol biru <strong>Deploy &gt; New deployment</strong> (Penerapan baru) di kanan atas.</li>
+  <li class="lang-en">Click the gear icon next to "Select type" and select <strong>Web app</strong>.</li>
+  <li class="lang-id">Klik ikon gerigi di sebelah \"Pilih jenis\" dan pilih <strong>Web app</strong> (Aplikasi web).</li>
+  <li class="lang-en">Enter a description (e.g., <code>Hi-Vault API</code>).</li>
+  <li class="lang-id">Masukkan deskripsi singkat (contoh: <code>Hi-Vault API</code>).</li>
+  <li class="lang-en">Execute as: <strong>Me (your email)</strong>.</li>
+  <li class="lang-id">Jalankan sebagai (Execute as): <strong>Me (email Anda)</strong>.</li>
+  <li class="lang-en">Who has access: <strong>Anyone</strong>.</li>
+  <li class="lang-id">Siapa yang memiliki akses (Who has access): <strong>Anyone</strong> (Siapa saja). Ini diperlukan agar Vercel dapat terhubung.</li>
+  <li class="lang-en">Click <strong>Deploy</strong>, then copy the generated <strong>Web app URL</strong>.</li>
+  <li class="lang-id">Klik tombol <strong>Deploy</strong>, kemudian salin <strong>Web app URL</strong> yang dihasilkan.</li>
 </ol>
 </div>
 <div class="settings-card" style="max-width:800px; margin-bottom:24px;">
-<h3>5. Connect to Hi-Vault</h3>
-<p>Connect your frontend web application to the spreadsheet backend.</p>
+<h3>
+  <span class="lang-en">5. Connect to Hi-Vault</span>
+  <span class="lang-id">5. Hubungkan ke Hi-Vault</span>
+</h3>
+<p>
+  <span class="lang-en">Connect your frontend web application to the spreadsheet backend.</span>
+  <span class="lang-id">Hubungkan aplikasi web frontend Anda dengan backend Google Sheets.</span>
+</p>
 <ol style="margin-left:20px; font-size:14px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
-  <li>Go to the <strong>Settings</strong> tab in Hi-Vault.</li>
-  <li>Paste the Web App URL into the <strong>Web App URL</strong> input field.</li>
-  <li>Click <strong>Save &amp; Reload</strong>.</li>
-  <li>Log in with the username and password you configured in Step 2!</li>
+  <li class="lang-en">Go to the <strong>Settings</strong> tab in Hi-Vault.</li>
+  <li class="lang-id">Buka tab <strong>Settings</strong> di aplikasi Hi-Vault ini.</li>
+  <li class="lang-en">Paste the Web App URL into the <strong>Web App URL</strong> input field.</li>
+  <li class="lang-id">Tempel URL Aplikasi Web tadi ke dalam kolom input <strong>Web App URL</strong>.</li>
+  <li class="lang-en">Click <strong>Save &amp; Reload</strong>.</li>
+  <li class="lang-id">Klik tombol <strong>Save &amp; Reload</strong>.</li>
+  <li class="lang-en">Log in with the username and password you configured in Step 2!</li>
+  <li class="lang-id">Masuklah menggunakan username dan password yang telah Anda buat di Langkah 2!</li>
 </ol>
 </div>
 </div>
