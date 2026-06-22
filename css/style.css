@@ -237,6 +237,9 @@ input{font-family:inherit}
 .btn-sort, .btn-primary-sm{flex-shrink:0}
 .card{padding:12px 16px}
 .card-top{margin-bottom:8px}
+.card-identity{gap:8px;width:0}
+.card-info{width:0}
+.card-menu-container{gap:2px}
 .card-icon{width:36px;height:36px}
 .card-icon .ms{font-size:20px}
 .card-label{font-size:15px}
