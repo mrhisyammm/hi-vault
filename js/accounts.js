@@ -5,7 +5,49 @@ async function loadAccounts(){
   try{
     var d=await api('accounts');
     if(d.success){
-      accounts=d.accounts||[];
+      var serverAccounts=d.accounts||[];
+      
+      // Reconcile with pending offline queue to prevent flickering/disappearing items
+      try{
+        var q=await dbGetAll('queue');
+        if(q&&q.length>0){
+          for(var i=0;i<q.length;i++){
+            var item=q[i];
+            if(item.action==='add'){
+              var exists=serverAccounts.some(function(a){
+                return a.label===item.params.label&&a.secret===item.params.secret;
+              });
+              if(!exists){
+                var tempRow=serverAccounts.length>0?Math.max.apply(Math,serverAccounts.map(function(o){return o.row}))+1:3;
+                serverAccounts.push({label:item.params.label,secret:item.params.secret,fav:false,row:tempRow});
+              }
+            }else if(item.action==='delete'){
+              serverAccounts=serverAccounts.filter(function(a){return a.row!==item.params.row});
+            }else if(item.action==='favorite'){
+              serverAccounts.forEach(function(a){
+                if(a.row===item.params.row)a.fav=!a.fav;
+              });
+            }else if(item.action==='edit'){
+              serverAccounts.forEach(function(a){
+                if(a.row===item.params.row){a.label=item.params.label;a.secret=item.params.secret}
+              });
+            }else if(item.action==='reorder'){
+              var rows=JSON.parse(item.params.rows);
+              var ordered=[];
+              rows.forEach(function(r){
+                var found=serverAccounts.find(function(a){return a.row===r});
+                if(found)ordered.push(found);
+              });
+              serverAccounts.forEach(function(a){
+                if(ordered.indexOf(a)===-1)ordered.push(a);
+              });
+              serverAccounts=ordered;
+            }
+          }
+        }
+      }catch(eQueue){}
+      
+      accounts=serverAccounts;
       await saveLocalCache();
       codes=new Array(accounts.length);
       await refreshAll();
