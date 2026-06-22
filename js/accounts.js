@@ -104,11 +104,11 @@ function renderCards(containerId,list,query,allowDrag,mode){
     var ico=getIcon(a.label);
     var c1=c.substring(0,3),c2=c.substring(3);
     html+='<div class="card'+(a.fav?' fav':'')+'" data-oi="'+oi+'"'+(canDrag?' draggable="true" ondragstart="dStart(event)" ondragover="dOver(event)" ondragenter="dEnter(event)" ondragleave="dLeave(event)" ondrop="dDrop(event)" ondragend="dEnd(event)"':'')+' onclick="copyCode('+oi+')">';
-    html+='<div class="card-accent"></div>';
     html+='<div class="card-copied" id="copied'+oi+'">Copied!</div>';
     html+='<div class="card-top"><div class="card-identity">';
     html+='<div class="card-icon"><span class="ms" style="color:'+ico.c+'">'+ico.i+'</span></div>';
-    html+='<div class="card-info"><div class="card-label">'+esc(a.label)+'</div><div class="card-sub">'+esc(a.secret.substring(0,4)+'****')+'</div></div></div>';
+    var starHtml=a.fav?'<span class="ms ms-fill" style="color:#f59e0b; font-size:16px; margin-left:6px; vertical-align:middle;" title="Favorite">star</span>':'';
+    html+='<div class="card-info"><div class="card-label">'+esc(a.label)+starHtml+'</div><div class="card-sub">'+esc(a.secret.substring(0,4)+'****')+'</div></div></div>';
     html+='<div class="card-menu-container">';
     if(canDrag)html+='<div class="drag-handle card-btn" onclick="event.stopPropagation()"><span class="ms">drag_indicator</span></div>';
     html+='<button class="card-btn" onclick="event.stopPropagation();toggleCardMenu(event,'+oi+')" title="Menu"><span class="ms">more_vert</span></button>';
