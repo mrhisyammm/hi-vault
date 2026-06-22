@@ -302,22 +302,6 @@ input{font-family:inherit}
 .fs-scanner .fs-hint{color:#fff;font-size:13px;font-weight:600;position:absolute;bottom:120px;left:50%;transform:translateX(-50%);z-index:310;background:rgba(15,23,42,0.8);backdrop-filter:blur(8px);padding:8px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 12px rgba(0,0,0,0.25)}
 .fs-scanner .fs-view{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:cover}
 .fs-scanner .fs-view video{width:100%!important;height:100%!important;object-fit:cover!important}
-.fs-scanner .fs-reticle{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:305}
-.fs-scanner .fs-reticle-inner{width:260px;height:260px;border:2px solid rgba(52,211,153,0.4);border-radius:24px;box-shadow:0 0 0 9999px rgba(0,0,0,0.7), 0 0 15px rgba(52,211,153,0.2);position:relative;overflow:hidden}
-.fs-scanner .fs-laser {
-  position: absolute;
-  left: 5%;
-  width: 90%;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #34d399, transparent);
-  box-shadow: 0 0 10px #34d399;
-  animation: laserSweep 2.2s ease-in-out infinite;
-  z-index: 5;
-}
-@keyframes laserSweep {
-  0%, 100% { top: 5%; }
-  50% { top: 95%; }
-}
 .fs-scanner .fs-err{color:#ef4444;font-size:13px;position:absolute;bottom:80px;z-index:310;background:rgba(0,0,0,.7);padding:6px 12px;border-radius:6px}
 
 /* ===== LIVE ACTIONS ROW ===== */

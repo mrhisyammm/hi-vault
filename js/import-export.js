@@ -502,6 +502,7 @@ function saveLiveToMyAccounts(){
   var secret=input.value.trim().replace(/\s/g,'').toUpperCase();
   document.getElementById('addLabel').value=liveDecodedLabel||'Live Decoded';
   document.getElementById('addSecret').value=secret;
+  openedFromLive=true;
   openModal('modalAdd');
 }
 

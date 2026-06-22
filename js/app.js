@@ -8,6 +8,7 @@ var tickInterval=null;
 var dragSrcIndex=null;
 var qrDownloadFilename='';
 var isLoggedIn=false;
+var openedFromLive=false;
 
 /* ===== ICON MAP ===== */
 var IM={'google':{i:'mail',c:'#4285F4'},'gmail':{i:'mail',c:'#EA4335'},'github':{i:'code',c:'#24292e'},'aws':{i:'cloud',c:'#ff9900'},'amazon':{i:'shopping_cart',c:'#ff9900'},'slack':{i:'forum',c:'#4A154B'},'discord':{i:'headset_mic',c:'#5865F2'},'twitter':{i:'alternate_email',c:'#1DA1F2'},'x.com':{i:'alternate_email',c:'#000'},'facebook':{i:'thumb_up',c:'#1877F2'},'meta':{i:'thumb_up',c:'#1877F2'},'microsoft':{i:'window',c:'#00A4EF'},'azure':{i:'cloud_queue',c:'#0078D4'},'apple':{i:'phone_iphone',c:'#555'},'dropbox':{i:'cloud_upload',c:'#0061FF'},'binance':{i:'currency_bitcoin',c:'#F0B90B'},'coinbase':{i:'currency_exchange',c:'#0052FF'},'steam':{i:'sports_esports',c:'#1b2838'},'telegram':{i:'send',c:'#26A5E4'},'whatsapp':{i:'chat',c:'#25D366'},'instagram':{i:'photo_camera',c:'#E4405F'},'linkedin':{i:'work',c:'#0A66C2'},'cloudflare':{i:'security',c:'#F38020'},'digitalocean':{i:'water_drop',c:'#0080FF'},'digital ocean':{i:'water_drop',c:'#0080FF'},'vercel':{i:'deployed_code',c:'#000'},'netlify':{i:'web',c:'#00C7B7'},'stripe':{i:'payments',c:'#635BFF'},'paypal':{i:'account_balance_wallet',c:'#00457C'},'reddit':{i:'forum',c:'#FF4500'},'wordpress':{i:'edit_note',c:'#21759B'},'shopify':{i:'storefront',c:'#7AB55C'},'figma':{i:'draw',c:'#F24E1E'},'notion':{i:'description',c:'#000'},'bitwarden':{i:'key',c:'#175DDC'},'lastpass':{i:'password',c:'#D32D27'},'1password':{i:'lock',c:'#0572EC'},'tiktok':{i:'music_note',c:'#000'},'youtube':{i:'play_circle',c:'#FF0000'},'twitch':{i:'live_tv',c:'#9146FF'},'epic':{i:'sports_esports',c:'#000'},'riot':{i:'sports_esports',c:'#D32936'},'proton':{i:'mail',c:'#6D4AFF'},'okta':{i:'verified_user',c:'#007DC1'},'jira':{i:'bug_report',c:'#0052CC'},'atlassian':{i:'dashboard',c:'#0052CC'},'heroku':{i:'cloud',c:'#430098'}};
@@ -143,7 +144,19 @@ async function saveLocalCache() {
 function openModal(id){document.getElementById(id).classList.add('show')}
 function closeModal(id){
   document.getElementById(id).classList.remove('show');
-  if(id==='modalAdd') stopQRScanner();
+  if(id==='modalAdd') {
+    stopQRScanner();
+    document.getElementById('addLabel').value='';
+    document.getElementById('addSecret').value='';
+    if(openedFromLive) {
+      var liveInp=document.getElementById('liveSecretInput');
+      if(liveInp) {
+        liveInp.value='';
+        updateLiveTOTP();
+      }
+      openedFromLive=false;
+    }
+  }
 }
 
 /* ===== SETTINGS ===== */
