@@ -141,7 +141,34 @@ async function submitPw(){
       setTimeout(function(){inpU.classList.remove('error');inpP.classList.remove('error')},400);
       username='';password='';
     }
-  }catch(e){err.textContent='Connection failed: '+e.message;err.classList.add('show');username='';password=''}
+  }catch(e){
+    var cached=localStorage.getItem('hv_cached_accounts');
+    if(cached){
+      try{
+        var decrypted=await decryptData(cached,pw,user);
+        if(decrypted){
+          username=user.toLowerCase();
+          password=pw;
+          isLoggedIn=true;
+          document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
+          document.getElementById('sidebarUserSection').style.display='flex';
+          document.getElementById('btnSidebarLogout').style.display='flex';
+          document.getElementById('btnSidebarLogin').style.display='none';
+          setSavedUser(username);
+          setSavedPw(pw);
+          err.classList.remove('show');
+          document.getElementById('screenLogin').style.display='none';
+          document.getElementById('screenApp').style.display='flex';
+          showToast('Offline Mode. Access granted.',true);
+          loadAccounts();
+          btn.textContent='Login';btn.disabled=false;
+          hideSplash();
+          return;
+        }
+      }catch(errDec){}
+    }
+    err.textContent='Connection failed: '+e.message;err.classList.add('show');username='';password='';
+  }
   btn.textContent='Login';btn.disabled=false;
   hideSplash();
 }

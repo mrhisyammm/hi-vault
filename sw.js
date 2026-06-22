@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hi-vault-v3.0';
+const CACHE_NAME = 'hi-vault-v3.1';
 const ASSETS = [
   './',
   './index.html',
@@ -103,7 +103,9 @@ self.addEventListener('fetch', e => {
           return response;
         });
       }).catch(() => {
-        return caches.match(e.request);
+        return caches.match(e.request).then(function(r){
+          return r || caches.match('./index.html');
+        });
       })
     );
     return;
