@@ -105,6 +105,7 @@ async function doReorder(fromOi,toOi){
   reorderTimeout=setTimeout(async function(){
     var rows=accounts.map(function(a){return a.row});
     if(!isOnline){
+      offlineReorderRows = accounts.map(function(a){return a.row});
       addToOfflineQueue('reorder',{rows:JSON.stringify(rows)});
       showToast('Order saved locally (offline)',false);
       return;
@@ -116,6 +117,7 @@ async function doReorder(fromOi,toOi){
       showToast('Order synced to cloud');
     }catch(e){
       if(!isOnline){
+        offlineReorderRows = accounts.map(function(a){return a.row});
         addToOfflineQueue('reorder',{rows:JSON.stringify(rows)});
         setOnline(false);
         showToast('Offline Mode. Reorder queued.',true);

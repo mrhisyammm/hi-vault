@@ -7,45 +7,85 @@ async function loadAccounts(){
     if(d.success){
       var serverAccounts=d.accounts||[];
       
-      // Reconcile with pending offline queue to prevent flickering/disappearing items
-      try{
-        var q=await dbGetAll('queue');
-        if(q&&q.length>0){
-          for(var i=0;i<q.length;i++){
-            var item=q[i];
-            if(item.action==='add'){
-              var exists=serverAccounts.some(function(a){
-                return a.label===item.params.label&&a.secret===item.params.secret;
-              });
-              if(!exists){
-                var tempRow=serverAccounts.length>0?Math.max.apply(Math,serverAccounts.map(function(o){return o.row}))+1:3;
-                serverAccounts.push({label:item.params.label,secret:item.params.secret,fav:false,row:tempRow});
-              }
-            }else if(item.action==='delete'){
-              serverAccounts=serverAccounts.filter(function(a){return a.row!==item.params.row});
-            }else if(item.action==='favorite'){
-              serverAccounts.forEach(function(a){
-                if(a.row===item.params.row)a.fav=!a.fav;
-              });
-            }else if(item.action==='edit'){
-              serverAccounts.forEach(function(a){
-                if(a.row===item.params.row){a.label=item.params.label;a.secret=item.params.secret}
-              });
-            }else if(item.action==='reorder'){
-              var rows=JSON.parse(item.params.rows);
-              var ordered=[];
-              rows.forEach(function(r){
-                var found=serverAccounts.find(function(a){return a.row===r});
-                if(found)ordered.push(found);
-              });
-              serverAccounts.forEach(function(a){
-                if(ordered.indexOf(a)===-1)ordered.push(a);
-              });
-              serverAccounts=ordered;
-            }
-          }
+      // 1. Reconcile offline additions
+      var offlineTemps = accounts.filter(function(a){return a.isOfflineTemp});
+      offlineTemps.forEach(function(ot){
+        var exists = serverAccounts.some(function(sa){
+          return sa.label===ot.label && sa.secret===ot.secret;
+        });
+        if(!exists) {
+          serverAccounts.push(ot);
         }
-      }catch(eQueue){}
+      });
+      
+      // Clean up offlineTemps that are now synced on the server
+      accounts.forEach(function(a){
+        if(a.isOfflineTemp){
+          var synced = serverAccounts.some(function(sa){
+            return !sa.isOfflineTemp && sa.label===a.label && sa.secret===a.secret;
+          });
+          if(synced) a.isOfflineTemp = false; // Mark as synced
+        }
+      });
+      
+      // 2. Reconcile offline deletions
+      serverAccounts = serverAccounts.filter(function(sa){
+        return offlineDeletedRows.indexOf(sa.row) === -1;
+      });
+      // Clean up synced deletions (rows that are no longer returned by the server)
+      offlineDeletedRows = offlineDeletedRows.filter(function(row){
+        return serverAccounts.some(function(sa){return sa.row === row});
+      });
+      
+      // 3. Reconcile offline favorites
+      serverAccounts.forEach(function(sa){
+        if(offlineFavToggles[sa.row]!==undefined){
+          sa.fav = offlineFavToggles[sa.row];
+        }
+      });
+      // Clean up synced favorites
+      for(var row in offlineFavToggles){
+        var sa = serverAccounts.find(function(a){return a.row===parseInt(row)});
+        if(sa && sa.fav===offlineFavToggles[row]){
+          delete offlineFavToggles[row];
+        }
+      }
+      
+      // 4. Reconcile offline edits
+      serverAccounts.forEach(function(sa){
+        if(offlineEdits[sa.row]){
+          sa.label = offlineEdits[sa.row].label;
+          sa.secret = offlineEdits[sa.row].secret;
+        }
+      });
+      // Clean up synced edits
+      for(var row in offlineEdits){
+        var sa = serverAccounts.find(function(a){return a.row===parseInt(row)});
+        if(sa && sa.label===offlineEdits[row].label && sa.secret===offlineEdits[row].secret){
+          delete offlineEdits[row];
+        }
+      }
+      
+      // 5. Reconcile offline reorders
+      if(offlineReorderRows && offlineReorderRows.length>0){
+        var ordered=[];
+        offlineReorderRows.forEach(function(r){
+          var found=serverAccounts.find(function(sa){return sa.row===r});
+          if(found)ordered.push(found);
+        });
+        serverAccounts.forEach(function(sa){
+          if(ordered.indexOf(sa)===-1)ordered.push(sa);
+        });
+        serverAccounts=ordered;
+        
+        // Clean up: check if server order matches our desired order
+        var serverRows = serverAccounts.map(function(sa){return sa.row});
+        var matches = true;
+        for(var i=0;i<offlineReorderRows.length;i++){
+          if(offlineReorderRows[i]!==serverRows[i]) { matches = false; break; }
+        }
+        if(matches) offlineReorderRows = null;
+      }
       
       accounts=serverAccounts;
       await saveLocalCache();
@@ -207,6 +247,7 @@ async function toggleFav(oi){
   renderView();
   await saveLocalCache();
   if(!isOnline){
+    offlineFavToggles[a.row] = a.fav;
     addToOfflineQueue('favorite',{row:a.row});
     showToast(a.fav?a.label+' favorited (offline)':a.label+' unfavorited (offline)',false);
     return;
@@ -220,6 +261,7 @@ async function toggleFav(oi){
     await saveLocalCache();
   }catch(e){
     if(!isOnline){
+      offlineFavToggles[a.row] = a.fav;
       addToOfflineQueue('favorite',{row:a.row});
       showToast('Offline Mode. Favorited locally.',true);
     }else{
@@ -248,7 +290,7 @@ async function doAddAccount(){
   document.getElementById('addLabel').value='';
   document.getElementById('addSecret').value='';
   var tempRow=accounts.length>0?Math.max.apply(Math,accounts.map(function(o){return o.row}))+1:3;
-  var newAcc={label:label,secret:secret,fav:false,row:tempRow};
+  var newAcc={label:label,secret:secret,fav:false,row:tempRow,isOfflineTemp:true};
   accounts.push(newAcc);
   codes.push('------');
   renderView();
@@ -315,6 +357,7 @@ async function doEditAccount(){
   await saveLocalCache();
   showToast('Account updated');
   if(!isOnline){
+    offlineEdits[a.row] = {label:label,secret:secret};
     addToOfflineQueue('edit',{row:a.row,label:label,secret:secret});
     showToast('Changes saved locally (offline)');
     return;
@@ -325,6 +368,7 @@ async function doEditAccount(){
     await loadAccounts();
   }catch(e){
     if(!isOnline){
+      offlineEdits[a.row] = {label:label,secret:secret};
       addToOfflineQueue('edit',{row:a.row,label:label,secret:secret});
       showToast('Offline Mode. Edit queued.',true);
     }else{
@@ -354,6 +398,7 @@ async function doDeleteAccount(){
   var oldTarget=deleteTarget;
   deleteTarget=null;
   if(!isOnline){
+    offlineDeletedRows.push(a.row);
     addToOfflineQueue('delete',{row:a.row});
     showToast(a.label+' deleted locally (offline)',false);
     return;
@@ -364,6 +409,7 @@ async function doDeleteAccount(){
     await loadAccounts();
   }catch(e){
     if(!isOnline){
+      offlineDeletedRows.push(a.row);
       addToOfflineQueue('delete',{row:a.row});
       showToast('Offline Mode. Deletion queued.',true);
     }else{
