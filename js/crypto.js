@@ -28,10 +28,24 @@ function dbGet(store, key) {
 
 function dbPut(store, key, val) {
   return getDB().then(function(db) {
-    return new Promise(function(resolve) {
+    return new Promise(function(resolve, reject) {
       var tx = db.transaction(store, 'readwrite');
-      tx.objectStore(store).put(val, key);
+      var osc = tx.objectStore(store);
+      try {
+        if (osc.keyPath) {
+          if (typeof val === 'object' && val !== null) {
+            val[osc.keyPath] = key;
+          }
+          osc.put(val);
+        } else {
+          osc.put(val, key);
+        }
+      } catch(e) {
+        reject(e);
+        return;
+      }
       tx.oncomplete = function() { resolve(); };
+      tx.onerror = function(e) { reject(e.target.error); };
     });
   });
 }
