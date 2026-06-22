@@ -185,7 +185,8 @@ function renderCards(containerId,list,query,allowDrag,mode){
     var it=items[x],a=it.a,c=it.c,oi=it.oi;
     var ico=getIcon(a.label);
     var c1=c.substring(0,3),c2=c.substring(3);
-    html+='<div class="card'+(a.fav?' fav':'')+'" data-oi="'+oi+'"'+(canDrag?' draggable="true" ondragstart="dStart(event)" ondragover="dOver(event)" ondragenter="dEnter(event)" ondragleave="dLeave(event)" ondrop="dDrop(event)" ondragend="dEnd(event)"':'')+' onclick="copyCode('+oi+')">';
+    var isMenuOpen=(oi===openMenuOi&&(containerId==='cardsContainer'?'accounts':'favorites')===openMenuView);
+    html+='<div class="card'+(a.fav?' fav':'')+(isMenuOpen?' menu-open':'')+'" data-oi="'+oi+'"'+(canDrag?' draggable="true" ondragstart="dStart(event)" ondragover="dOver(event)" ondragenter="dEnter(event)" ondragleave="dLeave(event)" ondrop="dDrop(event)" ondragend="dEnd(event)"':'')+' onclick="copyCode('+oi+')">';
     html+='<div class="card-copied" id="copied'+oi+'">Copied!</div>';
     html+='<div class="card-top"><div class="card-identity">';
     html+='<div class="card-icon"><span class="ms" style="color:'+ico.c+'">'+ico.i+'</span></div>';
@@ -194,7 +195,7 @@ function renderCards(containerId,list,query,allowDrag,mode){
     html+='<div class="card-menu-container">';
     if(canDrag)html+='<div class="drag-handle card-btn" onclick="event.stopPropagation()"><span class="ms">drag_indicator</span></div>';
     html+='<button class="card-btn" onclick="event.stopPropagation();toggleCardMenu(event,'+oi+')" title="Menu"><span class="ms">more_vert</span></button>';
-    html+='<div class="card-dropdown" id="dropdown-'+oi+'">';
+    html+='<div class="card-dropdown'+(isMenuOpen?' show':'')+'" id="dropdown-'+oi+'">';
     html+='<div class="dropdown-item" onclick="event.stopPropagation();toggleFav('+oi+')"><span class="ms '+(a.fav?'ms-fill':'')+'" style="'+(a.fav?'color:#f59e0b;':'')+'">star</span>'+(a.fav?'Unfavorite':'Favorite')+'</div>';
     html+='<div class="dropdown-item" onclick="event.stopPropagation();openEditModal('+oi+')"><span class="ms">edit</span>Edit</div>';
     html+='<div class="dropdown-item" onclick="event.stopPropagation();exportQR('+oi+')"><span class="ms">qr_code</span>Export QR</div>';
@@ -222,14 +223,20 @@ function toggleCardMenu(event,oi){
     d.classList.toggle('show');
     if(d.classList.contains('show')){
       thisCard.classList.add('menu-open');
+      openMenuOi=oi;
+      openMenuView=currentView;
     }else{
       thisCard.classList.remove('menu-open');
+      openMenuOi=null;
+      openMenuView=null;
     }
   }
 }
 document.addEventListener('click',function(){
   document.querySelectorAll('.card-dropdown').forEach(function(el){el.classList.remove('show');});
   document.querySelectorAll('.card').forEach(function(c){c.classList.remove('menu-open');});
+  openMenuOi=null;
+  openMenuView=null;
 });
 
 /* ===== COPY ===== */

@@ -9,6 +9,8 @@ var dragSrcIndex=null;
 var qrDownloadFilename='';
 var isLoggedIn=false;
 var openedFromLive=false;
+var openMenuOi=null;
+var openMenuView=null;
 
 /* Offline memory state to prevent disappearing items during sync */
 var offlineDeletedRows = [];
