@@ -160,6 +160,8 @@ function showPublicView(v) {
 function goBackToLogin() {
   document.getElementById('screenApp').style.display='none';
   document.getElementById('screenLogin').style.display='flex';
+  var inp=document.getElementById('apiUrlInputLogin');
+  if(inp)inp.value=getApiUrl();
   switchView('accounts');
 }
 
@@ -176,6 +178,8 @@ function lockApp(){
   document.getElementById('userInput').value='';
   document.getElementById('pwInput').value='';
   document.getElementById('pwError').classList.remove('show');
+  var inp=document.getElementById('apiUrlInputLogin');
+  if(inp)inp.value=getApiUrl();
   accounts=[];codes=[];username='';password='';clearSavedCreds();
   document.querySelectorAll('.private-nav').forEach(function(el){el.style.display='flex'});
   document.getElementById('sidebarUserSection').style.display='flex';
