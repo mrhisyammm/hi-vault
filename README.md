@@ -15,6 +15,23 @@ Hi-Vault is a secure, institutional-grade, offline-first 2FA (Two-Factor Authent
 - **Sleek Sentry-inspired UI**: Premium dark/light themes that respect your system settings by default, with custom saturated icon filters and a clean monochrome dark theme.
 - **Setup Tutorial & About Views**: Fully bilingual (English & Indonesian) guides explaining setup steps and outlining the core architectural advantages of Hi-Vault over standard proprietary authenticators.
 
+## Why Hi-Vault?
+
+Standard authenticator apps (like Google Authenticator, Microsoft Authenticator, or Authy) store your 2FA keys in proprietary, closed-source cloud databases. This means you do not own your data—you are at the mercy of corporate lock-ins, subscription pricing, potential security leaks, and hidden analytics trackers.
+
+Hi-Vault is a completely **self-hosted, open-source, and private** alternative. It uses your own Google Drive spreadsheet (via a lightweight Google Apps Script Web App) as the database. You own the infrastructure, the code is transparent, and all local caches are encrypted using military-grade cryptography on your device.
+
+### Feature Comparison
+
+| Feature | **Hi-Vault** | **Google Authenticator** | **Others (Authy, MS, etc.)** |
+| :--- | :--- | :--- | :--- |
+| **Data Ownership** | 🟢 **You (Your Google Drive)** | 🔴 Google Cloud | 🔴 Corporate Cloud |
+| **Source Code** | 🟢 **Open Source (MIT)** | 🔴 Closed Source | 🔴 Closed Source |
+| **Offline-First Sync** | 🟢 **Yes (IndexedDB Queue)** | 🔴 No (Needs network) | 🔴 No (Needs network) |
+| **Export Formats** | 🟢 **CSV, QR, Migration Protobuf** | 🟡 Migration QR Only | 🔴 None / Proprietary |
+| **Privacy / Trackers** | 🟢 **None (0 trackers)** | 🔴 Google Analytics | 🔴 Ad/Analytics SDKs |
+| **Encryption** | 🟢 **AES-GCM 256-bit + PBKDF2** | 🟡 Cloud Synced (No E2EE by default) | 🟡 Encrypted by Host |
+
 ## Directory Structure
 
 The project has been restructured into clean, modular directories:
