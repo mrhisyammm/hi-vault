@@ -13,11 +13,11 @@
   --surface-container-high: #2d2d30;
   --surface-container-highest: #3f3f46;
   --on-surface: #f4f4f5;
-  --on-surface-variant: #a1a1aa;
+  --on-surface-variant: #c5c6d0;
   --inverse-surface: #edf0ff;
   --inverse-on-surface: #051a3e;
-  --outline: #27272a;
-  --outline-variant: #3f3f46;
+  --outline: #71717a;
+  --outline-variant: #27272a;
   --surface-tint: #b2c5ff;
   --primary: #ffffff;
   --on-primary: #09090b;
@@ -49,11 +49,11 @@
     --surface-container-high: #2d2d30;
     --surface-container-highest: #3f3f46;
     --on-surface: #f4f4f5;
-    --on-surface-variant: #a1a1aa;
+    --on-surface-variant: #c5c6d0;
     --inverse-surface: #edf0ff;
     --inverse-on-surface: #051a3e;
-    --outline: #27272a;
-    --outline-variant: #3f3f46;
+    --outline: #71717a;
+    --outline-variant: #27272a;
     --surface-tint: #b2c5ff;
     --primary: #ffffff;
     --on-primary: #09090b;
@@ -234,7 +234,7 @@ input{font-family:inherit}
 .settings-status.show{opacity:1}
 
 /* ===== LOGIN SCREEN ===== */
-.screen-login{display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:24px;background:var(--background);overflow-y:auto}
+.screen-login{display:flex;align-items:flex-start;justify-content:center;height:100%;width:100%;padding:24px 24px 60px;background:var(--background);overflow-y:auto;-webkit-overflow-scrolling:touch}
 .login-card{width:100%;max-width:400px;text-align:center;background:var(--surface);border:1px solid var(--outline-variant);border-radius:16px;padding:48px 40px;box-shadow:0 4px 20px rgba(9,30,66,.08)}
 .login-logo{width:72px;height:72px;margin:0 auto 20px;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(0,61,155,.2)}
 .login-logo svg{width:100%;height:100%;display:block}

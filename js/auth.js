@@ -118,7 +118,7 @@ async function submitPw(){
   var btn=document.getElementById('pwBtn');
   if(!getApiUrl()){err.textContent='Configure API URL first (click settings below)';err.classList.add('show');return}
   if(!user || !pw){err.textContent='Username and password required';err.classList.add('show');return}
-  btn.textContent='Checking...';btn.disabled=true;
+  btn.textContent='Logging in...';btn.disabled=true;
   username=user;
   password=pw;
   try{
@@ -142,7 +142,7 @@ async function submitPw(){
       username='';password='';
     }
   }catch(e){err.textContent='Connection failed: '+e.message;err.classList.add('show');username='';password=''}
-  btn.textContent='Unlock';btn.disabled=false;
+  btn.textContent='Login';btn.disabled=false;
   hideSplash();
 }
 
