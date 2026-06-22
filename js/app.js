@@ -68,10 +68,18 @@ function switchView(v){
   else if(v==='impexp')document.getElementById('viewImpExp').classList.add('active');
   else if(v==='tutorial'){
     document.getElementById('viewTutorial').classList.add('active');
-    var lang=getTutorialLangPreference();
+    var lang=getLangPreference();
     var view=document.getElementById('viewTutorial');
     if(view)view.setAttribute('data-lang',lang);
     var sel=document.getElementById('tutorialLang');
+    if(sel)sel.value=lang;
+  }
+  else if(v==='about'){
+    document.getElementById('viewAbout').classList.add('active');
+    var lang=getLangPreference();
+    var view=document.getElementById('viewAbout');
+    if(view)view.setAttribute('data-lang',lang);
+    var sel=document.getElementById('aboutLang');
     if(sel)sel.value=lang;
   }
   else if(v==='settings'){
@@ -220,14 +228,18 @@ function applyThemePreference(t){
   if(sel)sel.value=t;
 }
 
-/* ===== TUTORIAL LANGUAGE ===== */
-function getTutorialLangPreference(){return localStorage.getItem('hv_tutorial_lang')||'en'}
-function switchTutorialLang(lang){
-  localStorage.setItem('hv_tutorial_lang',lang);
-  var view=document.getElementById('viewTutorial');
-  if(view)view.setAttribute('data-lang',lang);
-  var sel=document.getElementById('tutorialLang');
-  if(sel)sel.value=lang;
+/* ===== GLOBAL LANGUAGE ===== */
+function getLangPreference(){return localStorage.getItem('hv_lang')||'en'}
+function switchLang(lang){
+  localStorage.setItem('hv_lang',lang);
+  ['viewTutorial','viewAbout'].forEach(function(id){
+    var view=document.getElementById(id);
+    if(view)view.setAttribute('data-lang',lang);
+  });
+  ['tutorialLang','aboutLang'].forEach(function(id){
+    var sel=document.getElementById(id);
+    if(sel)sel.value=lang;
+  });
 }
 
 if ('serviceWorker' in navigator) {
