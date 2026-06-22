@@ -17,6 +17,12 @@
 <link rel="stylesheet" href="./css/style.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+  (function(){
+    var t=localStorage.getItem('hv_theme')||'system';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
 </head>
 <body>
 
@@ -369,6 +375,19 @@ var WEB_APP_PASSWORD = "password";</pre>
 </div>
 <button class="btn-settings-save" onclick="saveSettingsApi()">Save &amp; Reload</button>
 <div class="settings-status" id="settingsStatus">Saved successfully!</div>
+</div>
+
+<div class="settings-card" style="margin-top: 24px;">
+<h3>Appearance</h3>
+<p>Choose your preferred color theme for Hi-Vault.</p>
+<div class="settings-field">
+<label>Theme</label>
+<select id="settingsTheme" onchange="applyThemePreference(this.value)" style="width:100%; padding:12px 16px; background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:10px; color:var(--on-surface); font-size:14px; outline:none; transition:border-color .2s; cursor:pointer;">
+  <option value="system">System Default</option>
+  <option value="light">Light</option>
+  <option value="dark">Dark</option>
+</select>
+</div>
 </div>
 </div>
 

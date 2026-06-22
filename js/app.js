@@ -63,6 +63,8 @@ function switchView(v){
   else if(v==='settings'){
     document.getElementById('viewSettings').classList.add('active');
     document.getElementById('settingsApiUrl').value=getApiUrl();
+    var sel=document.getElementById('settingsTheme');
+    if(sel)sel.value=getThemePreference();
   }
   renderView();
   closeSidebar();
@@ -173,4 +175,14 @@ function showToast(msg,isError){
   t.className='toast'+(isError?' error':'')+' show';
   clearTimeout(t._tid);
   t._tid=setTimeout(function(){t.classList.remove('show')},2200);
+}
+
+/* ===== THEME SELECTION ===== */
+function getThemePreference(){return localStorage.getItem('hv_theme')||'system'}
+function setThemePreference(t){localStorage.setItem('hv_theme',t)}
+function applyThemePreference(t){
+  setThemePreference(t);
+  document.documentElement.setAttribute('data-theme', t);
+  var sel=document.getElementById('settingsTheme');
+  if(sel)sel.value=t;
 }
