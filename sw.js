@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hi-vault-v3.9';
+const CACHE_NAME = 'hi-vault-v4.0';
 const ASSETS = [
   './',
   './index.html',
@@ -131,11 +131,8 @@ self.addEventListener('fetch', e => {
 });
 
 // ===== BACKGROUND SYNC =====
-self.addEventListener('sync', event => {
-  if (event.tag === 'sync-hv-vault') {
-    event.waitUntil(syncOfflineQueue());
-  }
-});
+// System background sync disabled to prevent concurrent main-thread conflicts.
+// The active PWA tab handles sync manually on reconnect.
 
 async function syncOfflineQueue() {
   try {

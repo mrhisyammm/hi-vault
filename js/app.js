@@ -115,27 +115,34 @@ async function addToOfflineQueue(action,params){
 
 async function processOfflineQueue(){
   if(isSyncing||!navigator.onLine)return;
-  var q=await dbGetAll('queue');
-  if(q.length===0)return;
   isSyncing=true;
-  showToast('Syncing offline changes...',false);
-  var failedCount=0;
-  for(var i=0;i<q.length;i++){
-    var item=q[i];
-    try{
-      var d=await api(item.action,item.params);
-      if(!d.success)throw new Error(d.error);
-      await dbDelete('queue',item.id);
-    }catch(e){
-      failedCount++;
+  try {
+    var q=await dbGetAll('queue');
+    if(q.length===0){
+      isSyncing=false;
+      return;
     }
-  }
-  isSyncing=false;
-  if(failedCount===0){
-    showToast('Sync complete!',false);
-    await loadAccounts();
-  }else{
-    showToast('Some changes failed to sync ('+failedCount+' pending)',true);
+    showToast('Syncing offline changes...',false);
+    var failedCount=0;
+    for(var i=0;i<q.length;i++){
+      var item=q[i];
+      try{
+        var d=await api(item.action,item.params);
+        if(!d.success)throw new Error(d.error);
+        await dbDelete('queue',item.id);
+      }catch(e){
+        failedCount++;
+      }
+    }
+    isSyncing=false;
+    if(failedCount===0){
+      showToast('Sync complete!',false);
+      await loadAccounts();
+    }else{
+      showToast('Some changes failed to sync ('+failedCount+' pending)',true);
+    }
+  } catch(err) {
+    isSyncing=false;
   }
 }
 
