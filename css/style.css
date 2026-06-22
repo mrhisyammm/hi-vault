@@ -101,11 +101,19 @@ input{font-family:inherit}
 
 /* ===== SIDEBAR ===== */
 .sidebar{width:260px;min-width:260px;background:var(--surface-container-low);border-right:1px solid var(--outline-variant);display:flex;flex-direction:column;padding:24px;box-shadow:4px 0 24px rgba(9,30,66,.04);z-index:30;transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.sidebar-header{display:flex;align-items:center;gap:12px;margin-bottom:32px}
-.sidebar-logo{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,61,155,.15);overflow:hidden;flex-shrink:0}
-.sidebar-logo svg{width:40px;height:40px}
+.sidebar-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:32px}
+.sidebar-logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,61,155,.15);overflow:hidden;flex-shrink:0}
+.sidebar-logo svg{width:44px;height:44px}
 .sidebar-brand h1{font-family:Manrope,sans-serif;font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-.02em;line-height:1.2}
 .sidebar-brand p{font-family:Inter;font-size:11px;color:var(--on-surface-variant);margin-top:1px}
+
+/* Status Badge */
+.status-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;padding:4px 8px;border-radius:999px;transition:all .3s}
+.status-badge.online{background:rgba(0,108,71,0.08);color:var(--secondary)}
+.status-badge.online .dot{background:var(--secondary)}
+.status-badge.offline{background:rgba(186,26,26,0.08);color:var(--error)}
+.status-badge.offline .dot{background:var(--error)}
+.status-badge .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
 .sidebar-nav{flex:1;display:flex;flex-direction:column;gap:4px}
 .nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:500;color:var(--on-surface-variant);transition:all .15s;text-decoration:none;cursor:pointer}
 .nav-item:hover{background:var(--surface-container-high)}
@@ -339,11 +347,5 @@ input{font-family:inherit}
 .login-card{padding:36px 24px}
 .modal{margin:16px;padding:24px}
 .settings-card{padding:24px}
-.status-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;padding:4px 8px;border-radius:999px;transition:all .3s}
-.status-badge.online{background:rgba(0,108,71,0.08);color:var(--secondary)}
-.status-badge.online .dot{background:var(--secondary)}
-.status-badge.offline{background:rgba(186,26,26,0.08);color:var(--error)}
-.status-badge.offline .dot{background:var(--error)}
-.status-badge .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
 }
 @media(max-width:380px){.card-code{font-size:24px;letter-spacing:.08em;gap:8px}}
