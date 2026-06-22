@@ -114,13 +114,6 @@ async function addToOfflineQueue(action,params){
 }
 
 async function processOfflineQueue(){
-  if ('serviceWorker' in navigator && 'SyncManager' in window) {
-    try{
-      var reg=await navigator.serviceWorker.ready;
-      await reg.sync.register('sync-hv-vault');
-      return;
-    }catch(e){}
-  }
   if(isSyncing||!navigator.onLine)return;
   var q=await dbGetAll('queue');
   if(q.length===0)return;
