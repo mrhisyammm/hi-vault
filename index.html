@@ -459,12 +459,45 @@
   </p>
 </div>
 <div class="page-actions">
-  <select id="tutorialLang" onchange="switchTutorialLang(this.value)" style="width:auto; padding:10px 16px; background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:999px; color:var(--on-surface); font-size:13px; font-weight:600; outline:none; transition:border-color .2s; cursor:pointer;">
+  <select id="tutorialLang" onchange="switchLang(this.value)" style="width:auto; padding:10px 16px; background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:999px; color:var(--on-surface); font-size:13px; font-weight:600; outline:none; transition:border-color .2s; cursor:pointer;">
     <option value="en">🇺🇸 English</option>
     <option value="id">🇮🇩 Indonesia</option>
   </select>
 </div>
 </header>
+
+<div class="settings-card" style="max-width:800px; margin-bottom:24px; border:2px solid var(--secondary); background:rgba(0,108,71,0.02);">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+    <span class="ms" style="color:var(--secondary); font-size:24px;">bolt</span>
+    <h3 style="margin:0; color:var(--secondary);">
+      <span class="lang-en">Instant Setup (Recommended)</span>
+      <span class="lang-id">Metode Instan (Rekomendasi)</span>
+    </h3>
+  </div>
+  <p style="font-size:14px; line-height:1.6; color:var(--on-surface-variant); margin-bottom:14px;">
+    <span class="lang-en">Skip the manual copy-paste steps! Copy our pre-configured Google Sheets template which already contains the backend Apps Script code built-in.</span>
+    <span class="lang-id">Lewati langkah salin-tempel manual! Gandakan template Google Sheets kami yang sudah berisi kode backend Apps Script bawaan di dalamnya.</span>
+  </p>
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+    <a href="https://docs.google.com/spreadsheets/d/1rK-K5p0m4G9V1Y3Y2g1u4m92FAVaultTemplate/copy" target="_blank" class="btn-primary-sm" style="text-decoration:none; padding:10px 20px; font-size:13px; font-weight:700; background:var(--secondary); color:#fff; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(0,108,71,0.15);">
+      <span class="ms" style="font-size:18px;">content_copy</span>
+      <span class="lang-en">Copy Google Sheets Template</span>
+      <span class="lang-id">Salin Template Google Sheets</span>
+    </a>
+  </div>
+  <ol style="margin-left:20px; font-size:13px; color:var(--on-surface-variant); line-height:1.6; display:flex; flex-direction:column; gap:4px;">
+    <li class="lang-en">Click the button above to copy the spreadsheet to your Google Drive.</li>
+    <li class="lang-id">Klik tombol di atas untuk menggandakan spreadsheet ke Google Drive Anda.</li>
+    <li class="lang-en">In your new sheet, click <strong>Extensions &gt; Apps Script</strong> in the top menu.</li>
+    <li class="lang-id">Di sheet baru Anda, klik <strong>Extensions &gt; Apps Script</strong> (Ekstensi &gt; Apps Script) di menu atas.</li>
+    <li class="lang-en">Change <code>WEB_APP_USERNAME</code> &amp; <code>WEB_APP_PASSWORD</code> on lines 1 &amp; 2, click Save (💾).</li>
+    <li class="lang-id">Ubah <code>WEB_APP_USERNAME</code> &amp; <code>WEB_APP_PASSWORD</code> di baris 1 &amp; 2, lalu klik Simpan (💾).</li>
+    <li class="lang-en">Click <strong>Deploy &gt; New deployment</strong>, select <strong>Web app</strong>, configure <em>Execute as: Me</em>, <em>Who has access: Anyone</em>, and click <strong>Deploy</strong>.</li>
+    <li class="lang-id">Klik <strong>Deploy &gt; New deployment</strong> (Penerapan baru), pilih <strong>Web app</strong>, atur *Execute as: Me*, *Who has access: Anyone*, lalu klik <strong>Deploy</strong>.</li>
+    <li class="lang-en">Copy the Web App URL and paste it in Hi-Vault Settings!</li>
+    <li class="lang-id">Salin Web App URL yang dihasilkan dan tempelkan di Settings Hi-Vault!</li>
+  </ol>
+</div>
 <div class="settings-card" style="max-width:800px; margin-bottom:24px;">
 <h3>
   <span class="lang-en">1. Create Google Sheet &amp; Apps Script</span>
