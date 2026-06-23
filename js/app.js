@@ -257,7 +257,7 @@ if ('serviceWorker' in navigator) {
 
 // Focus-based revalidation (TanStack SWR style) for instant multi-device sync
 window.addEventListener('focus', function() {
-  if (isLoggedIn && isOnline) {
+  if (isLoggedIn && navigator.onLine) {
     loadAccounts();
   }
 });
@@ -268,7 +268,7 @@ function triggerSyncOnInteraction() {
   var now = Date.now();
   if (now - lastSyncTime > 5000) {
     lastSyncTime = now;
-    if (isLoggedIn && isOnline) {
+    if (isLoggedIn && navigator.onLine) {
       loadAccounts();
     }
   }
